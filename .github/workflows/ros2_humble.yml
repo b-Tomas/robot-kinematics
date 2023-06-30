@@ -1,0 +1,29 @@
+name: ROS2 Humble CI
+
+on: pull_request
+
+jobs:
+  build_and_test:
+    name: Build and test
+    runs-on: ubuntu-latest
+    container:
+      image: ubuntu:22.04
+    env:
+      ROS_DISTRO: humble
+      DEBIAN_FRONTEND: noninteractive
+    steps:
+      - uses: actions/checkout@v2.3.4
+      - uses: ros-tooling/setup-ros@v0.2
+        with:
+          required-ros-distributions: ${{ env.ROS_DISTRO }}
+      - uses: ros-tooling/action-ros-ci@v0.2
+        with:
+          # See here for a full description of the field.
+          # https://github.com/ros-tooling/action-ros-ci/blob/c8ee1c91e007e9fdc7d0bedf1247746717a5ff39/action.yml#L45-L48
+          package-name: cpp_pubsub py_pubsub
+          target-ros2-distro:  ${{ env.ROS_DISTRO }}
+          # This token is required to clone this *private* repository. If other
+          # private repositories are required, you will require a specific
+          # shared secret. Otherwise, it is not required. See
+          # https://github.com/ros-tooling/action-ros-ci
+          import-token: ${{ secrets.GITHUB_TOKEN }}
