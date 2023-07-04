@@ -7,7 +7,6 @@ from openmanipulator_transformations.srv import Transform, TransformRequest, Tra
 
 
 TRANSFORM_SERVICE_NAME = "/transformations/transform"
-TRANSFORM_NODE_NAME = "transform_srv"
 
 # This is a proof of concept script. It is not meant to be used for anything in particular
 def transform_client(vec):
