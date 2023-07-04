@@ -68,6 +68,12 @@ cd ~/ws/
 catkin_make
 ```
 
+Source the new overlay (remeber to run this step in every new bash session you use for interacting with these packages):
+```sh
+cd ~/ws/
+. devel/setup.bash
+```
+
 To make sure everything is working, run the tests:
 ```sh
 TODO: We don't even have any code yet
@@ -75,7 +81,7 @@ TODO: We don't even have any code yet
 
 ## Run the code
 
-TODO: Create a launcfile for all of the required launches + our code
+TODO: Create a launchfile for all of the required launches + our code
 
 ```sh
 roslaunch open_manipulator_gazebo open_manipulator_gazebo.launch
