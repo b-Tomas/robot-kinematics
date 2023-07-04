@@ -6,8 +6,8 @@ set -e
 function show_help() {
   echo $'\nUsage:\t run.sh [OPTIONS] \n
   Options:\n
-  \t-i --image_name\t\t Name of the image to be run (default ros2_humble).\n
-  \t-c --container_name\t Name of the container(default ros2_humble_container).\n
+  \t-i --image_name\t\t Name of the image to be run (default ros2_noetic_arm).\n
+  \t-c --container_name\t Name of the container(default ros2_noetic_container_arm).\n
   \t--use_nvidia\t\t Use nvidia runtime.\n
   Examples:\n
   \trun.sh\n
@@ -48,9 +48,8 @@ while [[ "$#" -gt 0 ]]; do
 done
 
 # Update the arguments to default values if needed.
-
-IMAGE_NAME=${IMAGE_NAME:-ros2_humble}
-CONTAINER_NAME=${CONTAINER_NAME:-ros2_humble_container}
+IMAGE_NAME=${IMAGE_NAME:-ros2_noetic_arm}
+CONTAINER_NAME=${CONTAINER_NAME:-ros2_noetic_container_arm}
 
 SSH_PATH=/home/$USER/.ssh
 WORKSPACE_CONTAINER=/home/$(whoami)/ws/src/$REPOSITORY_FOLDER_NAME
@@ -66,6 +65,7 @@ fi
 
 xhost +
 docker run -it $NVIDIA_FLAGS \
+       --device /dev/dri \
        -e DISPLAY=$DISPLAY \
        -e SSH_AUTH_SOCK=$SSH_AUTH_SOCK_USER \
        -v $(dirname $SSH_AUTH_SOCK_USER):$(dirname $SSH_AUTH_SOCK_USER) \

@@ -6,12 +6,12 @@ set -e
 function show_help() {
   echo $'\nUsage:\t build.sh [OPTIONS] \n
   Options:\n
-  \t-i --image_name\t\t Name of the image to be built (default ros2_humble).\n
+  \t-i --image_name\t\t Name of the image to be built (default ros2_noetic_arm).\n
   Example:\n
   \tbuild.sh --image_name custom_image_name\n'
 }
 
-echo "Building the docker image for ros2 humble development."
+echo "Building the docker image for ros2 noetic development."
 
 SCRIPT_FOLDER_PATH="$(cd "$(dirname "$0")"; pwd)"
 CONTEXT_FOLDER_PATH="$(cd "$(dirname "$0")"; cd .. ; pwd)"
@@ -27,8 +27,7 @@ while [[ "$#" -gt 0 ]]; do
 done
 
 # Update the arguments to default values if needed.
-OS_VERSION="jammy"
-IMAGE_NAME=${IMAGE_NAME:-ros2_humble}
+IMAGE_NAME=${IMAGE_NAME:-ros2_noetic_arm}
 DOCKERFILE_PATH=$SCRIPT_FOLDER_PATH/Dockerfile
 
 USERID=$(id -u)
