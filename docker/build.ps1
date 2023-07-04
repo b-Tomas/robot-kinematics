@@ -4,12 +4,11 @@ Builds the docker image for ros noetic development
   
 .DESCRIPTION
 USAGE
-    .\docker\windows.ps1 build [options]
+    .\docker\build.ps1 [options]
     
 OPTIONS
     -ImageName      <string>    The name of the image to build
                                 (default: ros_noetic_arm)
-    -help                       Shows this help message.                    
 #>
 
 param (

@@ -4,7 +4,7 @@ Runs the ros noetic image in a container
 
 .DESCRIPTION
 USAGE
-    .\docker\windows.ps1 run [options]
+    .\docker\run.ps1 [options]
   
 OPTIONS
     -ImageName      <string>    The name of the image to be run
@@ -15,8 +15,8 @@ OPTIONS
                                 (default: false)
     -Display        <string>    Display address
                                 (default: [local ip]:0)
-    -help                       Shows this help message.
 #>
+
 param (
   [Parameter(Mandatory = $false)]
   [string]$ImageName = "ros_noetic_arm",
