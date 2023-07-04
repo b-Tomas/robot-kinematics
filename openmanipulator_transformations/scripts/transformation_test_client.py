@@ -21,7 +21,6 @@ def transform_client(vec):
 if __name__ == "__main__":
     if len(sys.argv) == 4:
         coords = tuple(map(lambda x: float(x), sys.argv[1:]))
-        print(coords)
     else:
         print(f"Usage: {sys.argv[0]} x y z")
         sys.exit(1)
