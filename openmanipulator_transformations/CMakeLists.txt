@@ -160,6 +160,7 @@ include_directories(
 ## in contrast to setup.py, you can choose the destination
 catkin_install_python(PROGRAMS
   scripts/transformation_service.py
+  scripts/transformation_client.py
   scripts/transformation_test_client.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )

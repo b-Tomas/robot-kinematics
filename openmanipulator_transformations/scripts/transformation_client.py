@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 
 import math
-import sys
 import os
 import rospy
 from open_manipulator_msgs.srv import SetJointPosition, SetJointPositionRequest
 from open_manipulator_msgs.msg import JointPosition
 from openmanipulator_transformations.srv import Transform
+
 
 """
 JointPosition.msg:
@@ -27,32 +27,42 @@ ROBOT_CONTROL_SERVICE_NAME = "/goal_joint_space_path"
 TRANSFORM_SERVICE_NAME = "/transformations/transform"
 
 
-def control_robot(vec):
+def control_robot(vec, path_time=5.0,
+                  max_accelerations_scaling_factor=1.0,
+                  max_velocity_scaling_factor=1.0,
+                  planning_group_name="robot matec"):
+
+    """Sends a request to move the robot joints to the required angles
+
+    Args:
+        vec: List of angles. Length 4
+        path_time (float, optional): Movement duration. Defaults to 5.0.
+        max_accelerations_scaling_factor (float, optional): Defaults to 1.0. Doesn't change much the robot behavior
+        max_velocity_scaling_factor (float, optional): Defaults to 1.0. Doesn't change much the robot behavior
+        planning_group_name (str, optional): For logs only. Defaults to "robot matec".
+
+    Returns:
+        Response
+    """
+
+    if len(vec) != 4: return
+    
     # Send to robot joint angles
     rospy.wait_for_service(ROBOT_CONTROL_SERVICE_NAME)
+
     try:
         service = rospy.ServiceProxy(ROBOT_CONTROL_SERVICE_NAME, SetJointPosition)
-        
-        # Group name for logs
-        planning_group_name = "robot matec"
-        
-        # Some values that not change to much the robot's behavior
-        max_accelerations_scaling_factor = 1.0
-        max_velocity_scaling_factor = 1.0
-
-        # Time from start to end movement
-        path_time = 5.0
 
         req = SetJointPositionRequest()
         req.planning_group = planning_group_name
-        req.joint_position  = JointPosition(["joint1", "joint2", "joint3", "joint4"], [vec[0], vec[1], vec[2], vec[3]], max_accelerations_scaling_factor, max_velocity_scaling_factor) 
+        req.joint_position  = JointPosition(["joint1", "joint2", "joint3", "joint4"], vec, max_accelerations_scaling_factor, max_velocity_scaling_factor) 
         req.path_time = path_time
 
-        resp = service(req)
+        res = service(req)
 
         print("[+] Comunicación con el robot exitosa.")
 
-        return resp
+        return res
     except rospy.ServiceException as e:
         print(f"[!] Llamada al servicio fallida: {e}")
 
@@ -85,11 +95,13 @@ def unwrap_angles(vec):
 
 
 def transform_position(vec):
+    # Gets joint values from the transformation service
+
     rospy.wait_for_service(TRANSFORM_SERVICE_NAME)
     
     try:
         service = rospy.ServiceProxy(TRANSFORM_SERVICE_NAME, Transform)        
-        
+
         resp = service(vec) # Transform x, y, z position to joint angles
 
         vec_joint = resp.joint_angles 
@@ -128,7 +140,7 @@ def show_menu():
 | '--------------' || '--------------' || '--------------' || '--------------' || '--------------' |  
  '----------------'  '----------------'  '----------------'  '----------------'  '----------------'   
 
-    Bienvenido al nodo Cliente, envía una posición en los ejes x, y, z a las que desea mover el robot.
+    Bienvenido al nodo Cliente. Posicion el end-effector del robot en la posición (x, y, z) deseada.
 
     Ingresa "?" para ver la lista de comandos
 
