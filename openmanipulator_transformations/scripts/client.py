@@ -32,7 +32,7 @@ def control_robot(vec):
     try:
         service = rospy.ServiceProxy(ROBOT_CONTROL_SERVICE_NAME, SetJointPosition)
         
-        # hacer Transformacion de posicion en el eslpacio a angulo de articulaciones
+        #  Transform position in space to joint angles
 
         req = SetJointPositionRequest()
         req.planning_group = "abc" # string
@@ -49,7 +49,7 @@ def control_robot(vec):
 
 
 def input_position():
-    # Se pide la posicion en el espacio
+    # get position in space
     vec = []
     try:    
         vec.append(float(input("Pos. X: ")))
@@ -61,13 +61,19 @@ def input_position():
         return 
 
 def filtrar(vec):
-    #como el robot recibe posiciones de -pi a pi nos aseguramos de trasladarlo en el caso de que sea mayor al rango establecido para el movimiento del robot
-    for i in range(0, 3):
-        while vec [i] > 3.15 or vec [i]< -3.15 : 
-            if vec [i] > 3.15:
-                vec[i] -= 6.28
-            elif vec[i] < -3.15:
-                vec[i] += 6.28
+    #Adjust positions within the range of -pi to pi for the robot's movement
+    vec_list = list(vec)  # Convert tupla to list
+
+    for i in range(3):
+        while vec_list [i] > 3.15 or vec_list [i]< -3.15 : 
+            if vec_list [i] > 3.15:
+                vec_list[i] -= 6.28
+            elif vec_list[i] < -3.15:
+                vec_list[i] += 6.28
+
+    vec_modified = tuple(vec_list)  # Convert list to tuple 
+    return vec_modified
+
 
 def transform_position(vec):
     rospy.wait_for_service(TRANSFORM_SERVICE_NAME)
@@ -75,7 +81,7 @@ def transform_position(vec):
     try:
         service = rospy.ServiceProxy(TRANSFORM_SERVICE_NAME, Transform)        
         
-        resp = service(vec) # transforma posicion x y z a angulos de articulaciones
+        resp = service(vec) # Transform x, y, z position to joint angles
 
         vec_joint = resp.joint_angles 
 
@@ -90,7 +96,28 @@ def transform_position(vec):
 def show_menu(): 
     print("""
 
-    BANNER
+ .----------------.  .----------------.  .----------------.  .----------------.  .----------------.   
+| .--------------. || .--------------. || .--------------. || .--------------. || .--------------. |  
+| |  _______     | || |     ____     | || |   ______     | || |     ____     | || |  _________   | |  
+| | |_   __ \    | || |   .'    `.   | || |  |_   _ \    | || |   .'    `.   | || | |  _   _  |  | |  
+| |   | |__) |   | || |  /  .--.  \  | || |    | |_) |   | || |  /  .--.  \  | || | |_/ | | \_|  | |  
+| |   |  __ /    | || |  | |    | |  | || |    |  __'.   | || |  | |    | |  | || |     | |      | |  
+| |  _| |  \ \_  | || |  \  `--'  /  | || |   _| |__) |  | || |  \  `--'  /  | || |    _| |_     | |  
+| | |____| |___| | || |   `.____.'   | || |  |_______/   | || |   `.____.'   | || |   |_____|    | |  
+| |              | || |              | || |              | || |              | || |              | |  
+| '--------------' || '--------------' || '--------------' || '--------------' || '--------------' |  
+ '----------------'  '----------------'  '----------------'  '----------------'  '----------------'   
+ .----------------.  .----------------.  .----------------.  .----------------.  .----------------.   
+| .--------------. || .--------------. || .--------------. || .--------------. || .--------------. |  
+| | ____    ____ | || |      __      | || |  _________   | || |  _________   | || |     ______   | |  
+| ||_   \  /   _|| || |     /  \     | || | |  _   _  |  | || | |_   ___  |  | || |   .' ___  |  | |  
+| |  |   \/   |  | || |    / /\ \    | || | |_/ | | \_|  | || |   | |_  \_|  | || |  / .'   \_|  | |  
+| |  | |\  /| |  | || |   / ____ \   | || |     | |      | || |   |  _|  _   | || |  | |         | |  
+| | _| |_\/_| |_ | || | _/ /    \ \_ | || |    _| |_     | || |  _| |___/ |  | || |  \ `.___.'\  | |  
+| ||_____||_____|| || ||____|  |____|| || |   |_____|    | || | |_________|  | || |   `._____.'  | |  
+| |              | || |              | || |              | || |              | || |              | |  
+| '--------------' || '--------------' || '--------------' || '--------------' || '--------------' |  
+ '----------------'  '----------------'  '----------------'  '----------------'  '----------------'   
 
     Bienvenido al nodo Cliente, envía una posición en los ejes x, y, z a las que desea mover el robot.
 
@@ -100,12 +127,13 @@ def show_menu():
 def show_commands():
     print("""
     
-    Command             Description
+    Comando             Descripcion
 
-    help    ?           Show this menu
-    pos     position    Send position to robot
-    exit    q           Finalize program
-    clc                 Clean console
+    help    ?           Muestra este menu
+    pos     position    Envio de posicion al robot
+    home                Envio posicion (0, 0, 0)
+    exit    q           Finalizar programa
+    clc                 Limpiar consola
 
     Ejemplo de uso:
     > pos
@@ -116,9 +144,9 @@ def show_commands():
     """)
 
 def clc():
-    if os.name == 'nt':  # Para sistemas Windows
+    if os.name == 'nt':  # to Windows
         os.system('cls')
-    else:  # Para sistemas basados en Unix (Linux, macOS)
+    else:  # to Unix (Linux, macOS)
         os.system('clear')
 
 if __name__ == "__main__": 
@@ -127,13 +155,13 @@ if __name__ == "__main__":
 
     while True:
 
-        # Ingresar comando
+        # Enter command
         command = input("\n> ")
         
 
-        # filtrar comando
+        # Filter commands
         if command == 'pos' or command == 'position':
-            # Ingresar posicion para enviar al robot
+            # Enter position to send to the robot
             vec_position = input_position()
             
             if vec_position != None:
@@ -143,16 +171,25 @@ if __name__ == "__main__":
                 else:
                     print("[-] Error al transformar posicion.")
             
+        elif command == 'home':
+            # Send init pose
+            print("[*] Envio posicion origen.")
+            vec_joint = transform_position([0, 0, 0])
+            if vec_joint != None:
+                control_robot(vec_joint)
+            else:
+                print("[-] Error al transformar posicion origio.")
+
         elif command == 'help' or command == '?':
-            # Mostrar menu y ejemplo de uso
+            # Show menu and usage example
             show_commands()
         
         elif command == 'clc':
-            # Limpiar consola
+            # clean console
             clc()
         
         elif command == 'exit' or command == 'q':
-            # Finalizar programa
+            # Finalize program
             break
 
         else: 
