@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import math
 import sys
 import os
 import rospy
@@ -26,18 +27,27 @@ ROBOT_CONTROL_SERVICE_NAME = "/goal_joint_space_path"
 TRANSFORM_SERVICE_NAME = "/transformations/transform"
 
 
-# This is a proof of concept script. It is not meant to be used for anything in particular
 def control_robot(vec):
+    # Send to robot joint angles
     rospy.wait_for_service(ROBOT_CONTROL_SERVICE_NAME)
     try:
         service = rospy.ServiceProxy(ROBOT_CONTROL_SERVICE_NAME, SetJointPosition)
         
-        #  Transform position in space to joint angles
+        
+        # Group name for logs
+        planning_group_name = "robot matec"
+        
+        # Some values that not change to much the robot's behavior
+        max_accelerations_scaling_factor = 1.0
+        max_velocity_scaling_factor = 1.0
+
+        # Time from start to end movement
+        path_time = 5.0
 
         req = SetJointPositionRequest()
-        req.planning_group = "abc" # string
-        req.joint_position  = JointPosition(["joint1", "joint2", "joint3", "joint4"], [vec[0], vec[1], vec[2], vec[3]], 1.0, 2.0) # JointPosition
-        req.path_time = 1.0 # float64
+        req.planning_group = planning_group_name
+        req.joint_position  = JointPosition(["joint1", "joint2", "joint3", "joint4"], [vec[0], vec[1], vec[2], vec[3]], max_accelerations_scaling_factor, max_velocity_scaling_factor) 
+        req.path_time = path_time
 
         resp = service(req)
 
@@ -45,7 +55,7 @@ def control_robot(vec):
 
         return resp
     except rospy.ServiceException as e:
-        print(f"Service call failed: {e}")
+        print(f"[!] Llamada al servicio fallida: {e}")
 
 
 def input_position():
@@ -57,19 +67,19 @@ def input_position():
         vec.append(float(input("Pos. Z: ")))
         return vec
     except ValueError:
-        print("[!] Error al ingresar un valor")
+        print("[!] Error al ingresar un valor.")
         return 
 
-def filtrar(vec):
-    #Adjust positions within the range of -pi to pi for the robot's movement
-    vec_list = list(vec)  # Convert tupla to list
+def unwrap_angles(vec):
+    # Adjust positions within the range of -pi to pi for the robot's movement
+    vec_list = list(vec)  # Convert tuple to list
 
     for i in range(3):
-        while vec_list [i] > 3.15 or vec_list [i]< -3.15 : 
-            if vec_list [i] > 3.15:
-                vec_list[i] -= 6.28
-            elif vec_list[i] < -3.15:
-                vec_list[i] += 6.28
+        while vec_list [i] > math.pi or vec_list [i]< -math.pi : 
+            if vec_list [i] > math.pi:
+                vec_list[i] -= 2*math.pi
+            elif vec_list[i] < -math.pi:
+                vec_list[i] += 2*math.pi
 
     vec_modified = tuple(vec_list)  # Convert list to tuple 
     return vec_modified
@@ -85,12 +95,12 @@ def transform_position(vec):
 
         vec_joint = resp.joint_angles 
 
-        filtrar(vec_joint) 
+        unwrap_angles(vec_joint) 
         
         return vec_joint
         
     except rospy.ServiceException as e:
-        print(f"Service call failed: {e}") 
+        print(f"[!] Llamada al servicio fallida: {e}") 
 
 
 def show_menu(): 
@@ -121,17 +131,18 @@ def show_menu():
 
     Bienvenido al nodo Cliente, envía una posición en los ejes x, y, z a las que desea mover el robot.
 
+    Ingresa "?" para ver la lista de comandos
+
     """)
-    show_commands()
 
 def show_commands():
     print("""
     
-    Comando             Descripcion
+    Comando             Descripción
 
-    help    ?           Muestra este menu
-    pos     position    Envio de posicion al robot
-    home                Envio posicion (0, 0, 0)
+    help    ?           Muestra este menú
+    pos     position    Envio de posición al robot
+    home                Envio de posición original 
     exit    q           Finalizar programa
     clc                 Limpiar consola
 
@@ -144,12 +155,15 @@ def show_commands():
     """)
 
 def clc():
-    if os.name == 'nt':  # to Windows
+    if os.name == 'nt':  # For Windows
         os.system('cls')
-    else:  # to Unix (Linux, macOS)
+    else:  # For Unix (Linux, macOS)
         os.system('clear')
 
 if __name__ == "__main__": 
+
+
+
     clc()
     show_menu()
 
@@ -158,7 +172,6 @@ if __name__ == "__main__":
         # Enter command
         command = input("\n> ")
         
-
         # Filter commands
         if command == 'pos' or command == 'position':
             # Enter position to send to the robot
@@ -174,12 +187,8 @@ if __name__ == "__main__":
         elif command == 'home':
             # Send init pose
             print("[*] Envio posicion origen.")
-            vec_joint = transform_position([0, 0, 0])
-            if vec_joint != None:
-                control_robot(vec_joint)
-            else:
-                print("[-] Error al transformar posicion origio.")
-
+            control_robot([0, 0, 0, 0])
+            
         elif command == 'help' or command == '?':
             # Show menu and usage example
             show_commands()
