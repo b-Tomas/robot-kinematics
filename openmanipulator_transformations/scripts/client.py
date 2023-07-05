@@ -33,7 +33,6 @@ def control_robot(vec):
     try:
         service = rospy.ServiceProxy(ROBOT_CONTROL_SERVICE_NAME, SetJointPosition)
         
-        
         # Group name for logs
         planning_group_name = "robot matec"
         
