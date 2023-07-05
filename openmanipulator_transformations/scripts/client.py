@@ -75,7 +75,7 @@ def unwrap_angles(vec):
     vec_list = list(vec)  # Convert tuple to list
 
     for i in range(3):
-        while vec_list [i] > math.pi or vec_list [i]< -math.pi : 
+        while vec_list [i] > math.pi or vec_list [i] < -math.pi : 
             if vec_list [i] > math.pi:
                 vec_list[i] -= 2*math.pi
             elif vec_list[i] < -math.pi:
@@ -161,14 +161,10 @@ def clc():
         os.system('clear')
 
 if __name__ == "__main__": 
-
-
-
     clc()
     show_menu()
 
     while True:
-
         # Enter command
         command = input("\n> ")
         
