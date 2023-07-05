@@ -104,7 +104,7 @@ def show_commands():
 
     help    ?           Show this menu
     pos     position    Send position to robot
-    exit                Finalize program
+    exit    q           Finalize program
     clc                 Clean console
 
     Ejemplo de uso:
@@ -128,7 +128,7 @@ if __name__ == "__main__":
     while True:
 
         # Ingresar comando
-        command = input("> ")
+        command = input("\n> ")
         
 
         # filtrar comando
@@ -151,7 +151,7 @@ if __name__ == "__main__":
             # Limpiar consola
             clc()
         
-        elif command == 'exit':
+        elif command == 'exit' or command == 'q':
             # Finalizar programa
             break
 
