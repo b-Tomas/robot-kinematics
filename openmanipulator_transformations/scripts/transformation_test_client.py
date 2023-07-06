@@ -19,10 +19,10 @@ def transform_client(vec):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) == 4:
+    if len(sys.argv) == 5:
         coords = tuple(map(lambda x: float(x), sys.argv[1:]))
     else:
-        print(f"Usage: {sys.argv[0]} x y z")
+        print(f"Usage: {sys.argv[0]} x y z t")
         sys.exit(1)
     print(f"Requesting: {coords}")
     print(f"Response: {transform_client(coords)}")
