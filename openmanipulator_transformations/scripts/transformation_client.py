@@ -169,8 +169,8 @@ def show_commands():
     Ángulo de ataque es la direccion de la pinza 
 
     Descripción de algunos ángulos de ataque desde la posicion origen:
-        Apuntando hacia el cielo: -1.57 (-pi/2)
-        Apuntando hacia el suelo:  1.57 ( pi/2)
+        Apuntando hacia el cielo:  1.57 ( pi/2)
+        Apuntando hacia el suelo: -1.57 (-pi/2)
         Apuntando hacia el exterior:  0
         
     """)
