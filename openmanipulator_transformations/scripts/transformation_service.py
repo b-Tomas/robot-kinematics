@@ -35,8 +35,16 @@ L4 = LAST_BIT_LONGITUDE
 OFFSET_X, OFFSET_Y, OFFSET_Z = JOINT_1_ORIGIN
 
 
-def transform(vec: tuple, l1, l2, l3, l4, offset_x=0, offset_y=0, offset_z=0) -> tuple:
-    x, y, z, t = vec
+def transform(ee_pose: tuple, seg_longitudes: tuple, offset_joints: tuple, offset_xyz=(0, 0, 0), reversed=False) -> tuple:
+    cant_joints = 4
+    assert len(ee_pose) == 4
+    assert len(seg_longitudes) == cant_joints
+    assert len(offset_joints) == cant_joints
+    assert len(offset_xyz) == 3
+    
+    x, y, z, t = ee_pose
+    l1, l2, l3, l4 = seg_longitudes
+    offset_x, offset_y, offset_z = offset_xyz
 
     x = x - offset_x
     y = y - offset_y
@@ -61,11 +69,13 @@ def transform(vec: tuple, l1, l2, l3, l4, offset_x=0, offset_y=0, offset_z=0) ->
     t3 = t-t1-t2
 
     # Transform back to cartesian coordinates and apply initial conditions
+    offset_q1, offset_q2, offset_q3, offset_q4 = offset_joints
+    direction = -1 if reversed else 1
     q1 = atan2(y, x)
     aux = atan(JOINT_3_ORIGIN[0]/JOINT_3_ORIGIN[2])
-    q2 =  pi/2-aux-t1
-    q3 = -pi/2-t2 + aux
-    q4 = -t3
+    q2 = direction*t1-offset_q2  #  pi/2-aux-t1
+    q3 = direction*t2-offset_q3  # -pi/2-t2 + aux
+    q4 = direction*t3-offset_q4  # -t3
 
     return (q1, q2, q3, q4)
 
