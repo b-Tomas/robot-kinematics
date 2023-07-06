@@ -39,8 +39,8 @@ def transform(vec: tuple, l1, l2, l3, l4, offset_x=0, offset_y=0, offset_z=0) ->
     x, y, z, t = vec
 
     x = x - offset_x
-    z = z - l1 - offset_z # Height of the second joint. This math is relative to the second joint
     y = y - offset_y
+    z = z - l1 - offset_z # Height of the second joint. This math is relative to the second joint
 
     # Transform (X, Y, Z, t) -> (X', Z') the coordinates in the plane formed by the joints with the origin in the first joint
     # X' being the horizontal distance from the origin to the end position
@@ -55,19 +55,17 @@ def transform(vec: tuple, l1, l2, l3, l4, offset_x=0, offset_y=0, offset_z=0) ->
     a1 = 2*w1*l2
     a2 = 2*w2*l2
     a3 = w1**2+w2**2+l2**2-l3**2
-    
-    print(a1, a2, a3)
 
     t1 = atan2(a2, a1) + acos(a3/sqrt(a1**2+a2**2))
     t2 = atan2((w2-l2*sin(t1)), (w1-l2*cos(t1))) - t1
     t3 = t-t1-t2
-    
+
     # Transform back to cartesian coordinates and apply initial conditions
     q1 = atan2(y, x)
     q2 =  pi/2-t1
     q3 = -pi/2-t2
     q4 = -t3
-    
+
     return (q1, q2, q3, q4)
 
 
