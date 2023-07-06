@@ -27,7 +27,7 @@ ROBOT_CONTROL_SERVICE_NAME = "/goal_joint_space_path"
 TRANSFORM_SERVICE_NAME = "/transformations/transform"
 
 
-def control_robot(vec, path_time=5.0,
+def control_robot(vec, path_time=3.0,
                   max_accelerations_scaling_factor=1.0,
                   max_velocity_scaling_factor=1.0,
                   planning_group_name="robot matec"):
@@ -74,6 +74,7 @@ def input_position():
         vec.append(float(input("Pos. X: ")))
         vec.append(float(input("Pos. Y: ")))
         vec.append(float(input("Pos. Z: ")))
+        vec.append(float(input("Ángulo de agarre: ")))
         return vec
     except ValueError:
         print("[!] Error al ingresar un valor.")
@@ -84,7 +85,7 @@ def unwrap_angles(vec):
     vec_list = list(vec)  # Convert tuple to list
 
     for i in range(3):
-        while vec_list [i] > math.pi or vec_list [i] < -math.pi : 
+        while vec_list [i] > math.pi or vec_list [i] < -math.pi :
             if vec_list [i] > math.pi:
                 vec_list[i] -= 2*math.pi
             elif vec_list[i] < -math.pi:
@@ -140,9 +141,9 @@ def show_menu():
 | '--------------' || '--------------' || '--------------' || '--------------' || '--------------' |  
  '----------------'  '----------------'  '----------------'  '----------------'  '----------------'   
 
-    Bienvenido al nodo Cliente. Posicion el end-effector del robot en la posición (x, y, z) deseada.
+    Bienvenido al nodo Cliente. Envía la posición de las articulaciones a partir de la posición del end-effector deseada.
 
-    Ingresa "?" para ver la lista de comandos
+    Ingresa "?" para ver la lista de comandos y "exit" para salir
 
     """)
 
@@ -159,10 +160,19 @@ def show_commands():
 
     Ejemplo de uso:
     > pos
-        Pos. X: 1.8
-        Pos. Y: 0.5
-        Pos. Z: -0.2
+        Pos. X: 1.0
+        Pos. Y: 1.0
+        Pos. Z: 1.0
+        Ángulo de agarre (rad): 1.57
 
+    Posicion X, Y y Z es la coordenada en el espacio
+    Ángulo de agarre es la direccion de la pinza 
+
+    Descripción de algunos ángulos de agarre desde la posicion origen:
+        Apuntando hacia el cielo:  1.57 ( pi/2)
+        Apuntando hacia el suelo: -1.57 (-pi/2)
+        Apuntando hacia el exterior:  0
+        
     """)
 
 def clc():
