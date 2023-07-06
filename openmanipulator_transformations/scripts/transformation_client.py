@@ -74,7 +74,7 @@ def input_position():
         vec.append(float(input("Pos. X: ")))
         vec.append(float(input("Pos. Y: ")))
         vec.append(float(input("Pos. Z: ")))
-        vec.append(float(input("Ángulo de ataque: ")))
+        vec.append(float(input("Ángulo de agarre: ")))
         return vec
     except ValueError:
         print("[!] Error al ingresar un valor.")
@@ -163,12 +163,12 @@ def show_commands():
         Pos. X: 1.0
         Pos. Y: 1.0
         Pos. Z: 1.0
-        Ángulo de ataque (rad): 1.57
+        Ángulo de agarre (rad): 1.57
 
     Posicion X, Y y Z es la coordenada en el espacio
-    Ángulo de ataque es la direccion de la pinza 
+    Ángulo de agarre es la direccion de la pinza 
 
-    Descripción de algunos ángulos de ataque desde la posicion origen:
+    Descripción de algunos ángulos de agarre desde la posicion origen:
         Apuntando hacia el cielo:  1.57 ( pi/2)
         Apuntando hacia el suelo: -1.57 (-pi/2)
         Apuntando hacia el exterior:  0
