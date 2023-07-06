@@ -1,9 +1,8 @@
-#!/usr/bin/env python
-from __future__ import print_function
+#!/usr/bin/env python3
 
 import sys
 import rospy
-from openmanipulator_transformations.srv import Transform, TransformRequest, TransformResponse
+from openmanipulator_transformations.srv import Transform
 
 
 TRANSFORM_SERVICE_NAME = "/transformations/transform"
@@ -21,12 +20,9 @@ def transform_client(vec):
 
 if __name__ == "__main__":
     if len(sys.argv) == 4:
-        x = int(sys.argv[1])
-        y = int(sys.argv[2])
-        z = int(sys.argv[3])
+        coords = tuple(map(lambda x: float(x), sys.argv[1:]))
     else:
         print(f"Usage: {sys.argv[0]} x y z")
         sys.exit(1)
-    coords = (x, y, z)
     print(f"Requesting: {coords}")
     print(f"Response: {transform_client(coords)}")

@@ -6,7 +6,9 @@ todo
 
 ## Docker setup
 
-- NVIDIA GPU support - *Skip this step if you don't have an NVIDIA graphics card*
+### Linux
+
+- NVIDIA GPU support - _Skip this step if you don't have an NVIDIA graphics card_
 
 Make sure you have the drivers installed:
 
@@ -53,6 +55,21 @@ $ pwd
 
 After this initial setup, the OpenManipulator repositories must be cloned. More on that in the next section.
 
+### Windows
+
+Assuming you have Docker Desktop/Engine installed, you might want to install WSL2 and use Docker with WSL2
+instead of Hyper-V. This guide is written with that in mind.
+
+You also need a X11 server, like [VcXsrc](https://sourceforge.net/projects/vcxsrv/). X11 will show the GUI of the
+simulator on your Windows PC. When initializating it, make sure to "Disable access control" so WSL can use it. You
+_maaay_ want to disable Clipboard support, for security reasons, but you can leave it if you like danger.
+
+With the Docker Engine started and the X11 server running, open a new PowerShell terminal (version 7+ recommended),
+go to the root of the repository and run `.\docker\build.ps1` to build and `.\docker\run.ps1` to run. Standard help
+for those command can be accessed with `Get-Help` and `-?`.
+
+After you've built the image and you are inside the container, you may prepare your workspace (next section).
+
 ## Prepare your workspace
 
 Once all system dependencies are met, from within the container navigate into the `openmanipulator_x` folder and clone the repos using `vsctool`:
@@ -63,18 +80,21 @@ vcs import < robotis.repos
 ```
 
 And then build the project:
+
 ```sh
 cd ~/ws/
 catkin_make
 ```
 
 Source the new overlay (remeber to run this step in every new bash session you use for interacting with these packages):
+
 ```sh
 cd ~/ws/
 . devel/setup.bash
 ```
 
 To make sure everything is working, run the tests:
+
 ```sh
 TODO: We don't even have any code yet
 ```
