@@ -141,9 +141,9 @@ def show_menu():
 | '--------------' || '--------------' || '--------------' || '--------------' || '--------------' |  
  '----------------'  '----------------'  '----------------'  '----------------'  '----------------'   
 
-    Bienvenido al nodo Cliente. Posicion el end-effector del robot en la posición (x, y, z) y ángulo de ataque.
+    Bienvenido al nodo Cliente. Posicion el end-effector del robot en la posición (x, y, z) y ángulo de ataque deseados.
 
-    Ingresa "?" para ver el menu de ayuda y "exit" para salir
+    Ingresa "?" para ver la lista de comandos y "exit" para salir
 
     """)
 
