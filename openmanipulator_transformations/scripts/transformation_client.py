@@ -27,7 +27,7 @@ ROBOT_CONTROL_SERVICE_NAME = "/goal_joint_space_path"
 TRANSFORM_SERVICE_NAME = "/transformations/transform"
 
 
-def control_robot(vec, path_time=5.0,
+def control_robot(vec, path_time=3.0,
                   max_accelerations_scaling_factor=1.0,
                   max_velocity_scaling_factor=1.0,
                   planning_group_name="robot matec"):
