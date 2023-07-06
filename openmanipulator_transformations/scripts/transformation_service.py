@@ -27,7 +27,7 @@ LINK_4_LONGITUDE = np.linalg.norm(JOINT_4_ORIGIN)
 # Distance from joint 4 to the center of the end-effector (the red cube in gazebo)
 LAST_BIT_LONGITUDE =  np.linalg.norm(JOINT_END_EFFECTOR)
 
-# These are the final paramets used for computation
+# These are the final parameters used for computation
 L1 = LINK_2_LONGITUDE
 L2 = LINK_3_LONGITUDE
 L3 = LINK_4_LONGITUDE
