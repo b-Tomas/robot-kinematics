@@ -62,7 +62,7 @@ def transform(vec: tuple, l1, l2, l3, l4, offset_x=0, offset_y=0, offset_z=0) ->
 
     # Transform back to cartesian coordinates and apply initial conditions
     q1 = atan2(y, x)
-    q2 =  pi/2-t1
+    q2 =  pi/2-atan(JOINT_3_ORIGIN[0]/JOINT_3_ORIGIN[2])-t1
     q3 = -pi/2-t2
     q4 = -t3
 
