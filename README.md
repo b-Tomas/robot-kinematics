@@ -101,7 +101,16 @@ TODO: We don't even have any code yet
 
 ## Run the code
 
-TODO: Create a launchfile for all of the required launches + our code
+You can use the provided launchfiles to run the simulation and transformation server, and in a different pane the CLI client
+```sh
+# Launch simulation and transformations server
+roslaunch openmanipulator_transformations transformations.launch
+# Launch the CLI
+roslaunch openmanipulator_transformations cli.launch
+```
+
+
+-- deprecated --
 
 ```sh
 roslaunch open_manipulator_gazebo open_manipulator_gazebo.launch

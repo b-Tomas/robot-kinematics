@@ -1,7 +1,8 @@
 <launch>
+    <!-- Launch the Gazebo world, RViz and the robot controller -->
     <include file="$(find open_manipulator_gazebo)/launch/open_manipulator_gazebo.launch"/>
     <include file="$(find open_manipulator_description)/launch/open_manipulator_rviz.launch"/>
     <include file="$(find open_manipulator_controller)/launch/open_manipulator_controller.launch">
-    <arg name="use_platform" value="false" />
+        <arg name="use_platform" value="false" />
     </include>
 </launch>

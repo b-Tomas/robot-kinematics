@@ -1,4 +1,5 @@
 <launch>
-    <include file="$(find openmanipulator_transformations)/launch/simulation.launch"/>
-    <node pkg="openmanipulator_transformations" type="transformation_service.py" name="transformation_service" output="both" />
+    <!-- Launch the simulation and the transformations server -->
+    <include file="$(find openmanipulator_transformations)/launch/simulation_only.launch"/>
+    <node pkg="openmanipulator_transformations" type="transformation_service.py" name="transformation_service" output="screen" />
 </launch>
