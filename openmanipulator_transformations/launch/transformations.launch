@@ -1,0 +1,6 @@
+<launch>
+    <!-- Launch the simulation, GUI control and the transformations server -->
+    <include file="$(find openmanipulator_transformations)/launch/simulation_only.launch"/>
+    <include file="$(find open_manipulator_control_gui)/launch/open_manipulator_control_gui.launch"/>
+    <node pkg="openmanipulator_transformations" type="transformation_service.py" name="transformation_service" output="screen" />
+</launch>
