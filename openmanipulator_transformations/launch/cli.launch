@@ -1,0 +1,3 @@
+<launch>
+    <node pkg="openmanipulator_transformations" type="transformation_client.py" name="transformation_cli" output="screen" />
+</launch>
