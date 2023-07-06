@@ -164,7 +164,7 @@ def show_commands():
         Pos. X: 1.0
         Pos. Y: 1.0
         Pos. Z: 1.0
-        Ángulo de ataque (rads): 1.57
+        Ángulo de ataque (rad): 1.57
 
     Posicion X, Y y Z es la coordenada en el espacio
     Ángulo de ataque es la direccion de la pinza 
