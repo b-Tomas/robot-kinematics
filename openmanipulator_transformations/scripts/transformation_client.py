@@ -74,6 +74,7 @@ def input_position():
         vec.append(float(input("Pos. X: ")))
         vec.append(float(input("Pos. Y: ")))
         vec.append(float(input("Pos. Z: ")))
+        vec.append(float(input("Ángulo de ataque: ")))
         return vec
     except ValueError:
         print("[!] Error al ingresar un valor.")
@@ -84,7 +85,7 @@ def unwrap_angles(vec):
     vec_list = list(vec)  # Convert tuple to list
 
     for i in range(3):
-        while vec_list [i] > math.pi or vec_list [i] < -math.pi : 
+        while vec_list [i] > math.pi or vec_list [i] < -math.pi :
             if vec_list [i] > math.pi:
                 vec_list[i] -= 2*math.pi
             elif vec_list[i] < -math.pi:
@@ -140,9 +141,9 @@ def show_menu():
 | '--------------' || '--------------' || '--------------' || '--------------' || '--------------' |  
  '----------------'  '----------------'  '----------------'  '----------------'  '----------------'   
 
-    Bienvenido al nodo Cliente. Posicion el end-effector del robot en la posición (x, y, z) deseada.
+    Bienvenido al nodo Cliente. Posicion el end-effector del robot en la posición (x, y, z) y ángulo de ataque.
 
-    Ingresa "?" para ver la lista de comandos
+    Ingresa "?" para ver el menu de ayuda y "exit" para salir
 
     """)
 
@@ -159,10 +160,19 @@ def show_commands():
 
     Ejemplo de uso:
     > pos
-        Pos. X: 1.8
-        Pos. Y: 0.5
-        Pos. Z: -0.2
+        Pos. X: 1.0
+        Pos. Y: 1.0
+        Pos. Z: 1.0
+        Ángulo de ataque (rad): 1.57
 
+    Posicion X, Y y Z es la coordenada en el espacio
+    Ángulo de ataque es la direccion de la pinza 
+
+    Descripción de algunos ángulos de ataque desde la posicion origen:
+        Apuntando hacia el cielo: -1.57 (-pi/2)
+        Apuntando hacia el suelo:  1.57 ( pi/2)
+        Apuntando hacia el exterior:  0
+        
     """)
 
 def clc():
