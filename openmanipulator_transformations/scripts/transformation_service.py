@@ -35,7 +35,7 @@ L4 = LAST_BIT_LONGITUDE
 OFFSET_X, OFFSET_Y, OFFSET_Z = JOINT_1_ORIGIN
 
 
-def transform(vec: tuple, l1, l2, l3, l4, offset_x, offset_y, offset_z) -> tuple:
+def transform(vec: tuple, l1, l2, l3, l4, offset_x=0, offset_y=0, offset_z=0) -> tuple:
     x, y, z, t = vec
 
     x = x - offset_x
@@ -62,7 +62,7 @@ def transform(vec: tuple, l1, l2, l3, l4, offset_x, offset_y, offset_z) -> tuple
     t2 = atan2((w2-l2*sin(t1)), (w1-l2*cos(t1))) - t1
     t3 = t-t1-t2
     
-    # Transform back to 3D and apply initial conditions
+    # Transform back to cartesian coordinates and apply initial conditions
     q1 = atan2(y, x)
     q2 =  pi/2-t1
     q3 = -pi/2-t2

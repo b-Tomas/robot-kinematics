@@ -13,17 +13,17 @@ def test_transform():
             print(transformed[i], expected[i])
             assert floor(transformed[i]*100) == floor(expected[i]*100)
 
-    transformed = transform((1, 0, 1, -pi/2), .5, 1, 1, .5, 0, 0, 0)
+    transformed = transform((1, 0, 1, -pi/2), .5, 1, 1, .5)
     expected = (0, 0, 0, pi/2)
     assert len(transformed), len(expected)
     test(transformed, expected)
     
-    transformed = transform((1.5, 0, 1.5, 0), .5, 1, 1, .5, 0, 0, 0)
+    transformed = transform((1.5, 0, 1.5, 0), .5, 1, 1, .5)
     expected = (0, 0, 0, 0)
     assert len(transformed), len(expected)
     test(transformed, expected)
 
-    transformed = transform((0.274, 0, 0.2028, 0), 0.0595, 0.13023, 0.124, 0.126, 0, 0, 0)
+    transformed = transform((0.274, 0, 0.2028, 0), 0.0595, 0.13023, 0.124, 0.126)
     expected = (0, 0, 0, 0)
     assert len(transformed), len(expected)
     test(transformed, expected)
