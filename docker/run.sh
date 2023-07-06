@@ -48,7 +48,7 @@ while [[ "$#" -gt 0 ]]; do
 done
 
 # Update the arguments to default values if needed.
-IMAGE_NAME=${IMAGE_NAME:-ros_noetic_arm}
+IMAGE_NAME=${IMAGE_NAME:-ros2_noetic_arm}
 CONTAINER_NAME=${CONTAINER_NAME:-ros_noetic_container_arm}
 
 SSH_PATH=/home/$USER/.ssh

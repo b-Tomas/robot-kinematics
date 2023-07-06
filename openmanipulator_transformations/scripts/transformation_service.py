@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import rospy
 
@@ -12,10 +12,10 @@ TRANSFORM_NODE_NAME = "transform_srv"
 # Computation service. Converts cartesian coordinates to joint angles using the matrix below
 
 matrix = np.array([
-    [1, 0, 0],
-    [0, 1, 0],
-    [0, 0, 1],
-    [0, 0, 0],
+    [1, 0, 0, 0],
+    [0, 1, 0, 0],
+    [0, 0, 1, 0],
+    [0, 0, 0, 1],
 ])
 
 
