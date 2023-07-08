@@ -4,10 +4,11 @@ import sys
 import rospy
 from openmanipulator_transformations.srv import Transform
 
+# Use as a python script
+# Call the transformations server and print the result
 
 TRANSFORM_SERVICE_NAME = "/transformations/transform"
 
-# This is a proof of concept script. It is not meant to be used for anything in particular
 def transform_client(vec):
     rospy.wait_for_service(TRANSFORM_SERVICE_NAME)
     try:

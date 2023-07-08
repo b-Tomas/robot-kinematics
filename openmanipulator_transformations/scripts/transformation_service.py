@@ -118,8 +118,7 @@ def transform(
 
 def process_service_request(req: TransformRequest) -> TransformResponse:
     rospy.loginfo(f"Received request: {req}")
-    if len(req.coordinates) != 4:
-        raise ValueError  # TODO: use a more meaningful error
+    assert len(req.coordinates) == 4, "Array length must be four"
     response = TransformResponse()
     response.joint_angles = transform(
         ee_pose=req.coordinates,
