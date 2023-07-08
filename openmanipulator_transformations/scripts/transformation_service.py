@@ -7,9 +7,8 @@ from openmanipulator_transformations.srv import (
     TransformRequest,
     TransformResponse,
 )
-from numpy import arctan2, array
+from numpy import arctan2, array, cos, arccos, sin, pi
 from numpy.linalg import norm
-from math import cos, acos, sin, pi
 
 # Computation service. Converts cartesian coordinates to joint angles using the data below
 
@@ -102,7 +101,7 @@ def transform(
     a3 = w1**2 + w2**2 + l2**2 - l3**2
 
     # Raises ValueError if the position is out of reach
-    t1 = arctan2(a2, a1) + acos(a3 / norm([a1, a2]))
+    t1 = arctan2(a2, a1) + arccos(a3 / norm([a1, a2]))
     t2 = arctan2((w2 - l2 * sin(t1)), (w1 - l2 * cos(t1))) - t1
     t3 = t - t1 - t2
 
