@@ -7,7 +7,7 @@ from openmanipulator_transformations.srv import (
     TransformRequest,
     TransformResponse,
 )
-from numpy import arctan2, array, cos, arccos, sin, pi
+from numpy import arctan2, array, cos, arccos, sin
 from numpy.linalg import norm
 
 # Computation service. Converts cartesian coordinates to joint angles using the data below
@@ -45,9 +45,11 @@ LINK_LONGITUDES = (
     LAST_BIT_LONGITUDE,
 )
 OFFSET_XYZ = tuple(JOINT_1_ORIGIN)
-aux = pi / 2 - arctan2(JOINT_3_ORIGIN[0], JOINT_3_ORIGIN[2])
-JOINT_OFFSETS = (0, -aux, aux, 0)
-REVERSED = True
+
+# If you look closely, you will notice that joints 2 and 3 angles are not exactly at a 90° relative to fully extended
+# This is how we calculate the angle
+offset = arctan2(JOINT_3_ORIGIN[2], JOINT_3_ORIGIN[0])
+JOINT_OFFSETS = (0, -offset, offset, 0)
 
 
 def transform(
@@ -55,7 +57,6 @@ def transform(
     seg_longitudes: tuple,
     offset_joints: tuple,
     offset_xyz=(0, 0, 0),
-    reversed=False,
 ) -> tuple:
     """Takes an end-effector position in space and computes the robot parameters for it to reach that position by
     using inverse kinematics calculations.
@@ -66,7 +67,6 @@ def transform(
         seg_longitudes (tuple): Longitude of each segment of the robot
         offset_joints (tuple): Zero angle of each joint relative to a fully extended horizontal position
         offset_xyz (tuple, optional): Position of the first joint in the frame of the end-effector. Defaults to (0, 0, 0).
-        reversed (bool, optional): Joint movement direction is reversed. Defaults to False.
 
     Returns:
         tuple: Required angle for each joint
@@ -78,13 +78,44 @@ def transform(
     assert len(offset_xyz) == 3
 
     x, y, z, t = ee_pose
-    l1, l2, l3, l4 = seg_longitudes
+    l1 = seg_longitudes[0]
     offset_x, offset_y, offset_z = offset_xyz
 
+    # Apply robot position offsets
     x = x - offset_x
     y = y - offset_y
     # Height of the second joint. This math is relative to the second joint
     z = z - l1 - offset_z
+
+    # Obtain the parameters for a fully extended robot
+    t1, t2, t3, t4 = transformation((x, y, z, t), seg_longitudes)
+
+    # Transform back to cartesian coordinates and apply initial conditions
+    offset_q1, offset_q2, offset_q3, offset_q4 = offset_joints
+    q1 = t1 - offset_q1
+    q2 = -t2 - offset_q2
+    q3 = -t3 - offset_q3
+    q4 = -t4 - offset_q4
+
+    return (q1, q2, q3, q4)
+
+
+def transformation(
+    ee_pose: tuple,
+    seg_longitudes: tuple,
+) -> tuple:
+    """Trasforms robot parameters to cartesian coordinates for a fully extended robot centered at the origin
+
+    Args:
+        ee_pose (tuple): end-effector pose
+        seg_longitudes (tuple): longitudes of eack link
+
+    Returns:
+        tuple: Robot parameters
+    """
+    x, y, z, t = ee_pose
+    # The length of the first link is not useful because of the orientation of the first joint
+    _, l2, l3, l4 = seg_longitudes
 
     # Transform (X, Y, Z, t) -> (X', Z') the coordinates in the plane formed by the joints with the origin in the first joint
     # X' being the horizontal distance from the origin to the end position
@@ -106,12 +137,10 @@ def transform(
     t3 = t - t1 - t2
 
     # Transform back to cartesian coordinates and apply initial conditions
-    offset_q1, offset_q2, offset_q3, offset_q4 = offset_joints
-    direction = -1 if reversed else 1
-    q1 = arctan2(y, x) - offset_q1
-    q2 = direction * t1 - offset_q2
-    q3 = direction * t2 - offset_q3
-    q4 = direction * t3 - offset_q4
+    q1 = arctan2(y, x)
+    q2 = t1
+    q3 = t2
+    q4 = t3
 
     return (q1, q2, q3, q4)
 
@@ -125,7 +154,6 @@ def process_service_request(req: TransformRequest) -> TransformResponse:
         seg_longitudes=LINK_LONGITUDES,
         offset_joints=JOINT_OFFSETS,
         offset_xyz=OFFSET_XYZ,
-        reversed=REVERSED,
     )
     rospy.loginfo(f"Generated response: {response}")
     return response
