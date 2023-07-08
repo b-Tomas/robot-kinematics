@@ -7,31 +7,23 @@ from open_manipulator_msgs.srv import SetJointPosition, SetJointPositionRequest
 from open_manipulator_msgs.msg import JointPosition
 from openmanipulator_transformations.srv import Transform
 
-
 """
-JointPosition.msg:
-string[]   joint_name
-float64[]  position
-float64    max_accelerations_scaling_factor
-float64    max_velocity_scaling_factor
-
-SetJointPosition.srv:
-string planning_group
-JointPosition joint_position
-float64 path_time
----
-bool is_planned
+Command-line interface for controlling the OpenManipulator-X robot arm by reading position commands 
+in cartesian coordinates from user input, transforming them to robot parameters using the 
+inverse-kinematics service and sending the paramters to the robot controller
 """
 
 ROBOT_CONTROL_SERVICE_NAME = "/goal_joint_space_path"
 TRANSFORM_SERVICE_NAME = "/transformations/transform"
 
 
-def control_robot(vec, path_time=3.0,
-                  max_accelerations_scaling_factor=1.0,
-                  max_velocity_scaling_factor=1.0,
-                  planning_group_name="robot matec"):
-
+def control_robot(
+    vec,
+    path_time=3.0,
+    max_accelerations_scaling_factor=1.0,
+    max_velocity_scaling_factor=1.0,
+    planning_group_name="robot matec",
+):
     """Sends a request to move the robot joints to the required angles
 
     Args:
@@ -45,22 +37,30 @@ def control_robot(vec, path_time=3.0,
         Response
     """
 
-    if len(vec) != 4: return
-    
-    # Send to robot joint angles
+    if len(vec) != 4:
+        return
+
+    # Send joint angles to the robot controller
     rospy.wait_for_service(ROBOT_CONTROL_SERVICE_NAME)
 
     try:
-        service = rospy.ServiceProxy(ROBOT_CONTROL_SERVICE_NAME, SetJointPosition)
+        controller_service = rospy.ServiceProxy(ROBOT_CONTROL_SERVICE_NAME, SetJointPosition)
 
         req = SetJointPositionRequest()
         req.planning_group = planning_group_name
-        req.joint_position  = JointPosition(["joint1", "joint2", "joint3", "joint4"], vec, max_accelerations_scaling_factor, max_velocity_scaling_factor) 
+        req.joint_position = JointPosition(
+            ["joint1", "joint2", "joint3", "joint4"],
+            vec,
+            max_accelerations_scaling_factor,
+            max_velocity_scaling_factor,
+        )
         req.path_time = path_time
 
-        res = service(req)
-
-        print("[+] Comunicación con el robot exitosa.")
+        res = controller_service(req)
+        if res.is_planned:
+            print("[+] Comunicación con el robot exitosa.")
+        else:
+            print("[-] El recorrido no pudo ser planeado.")
 
         return res
     except rospy.ServiceException as e:
@@ -70,53 +70,54 @@ def control_robot(vec, path_time=3.0,
 def input_position():
     # get position in space
     vec = []
-    try:    
+    try:
         vec.append(float(input("Pos. X: ")))
         vec.append(float(input("Pos. Y: ")))
         vec.append(float(input("Pos. Z: ")))
         vec.append(float(input("Ángulo de agarre: ")))
         return vec
     except ValueError:
-        print("[!] Error al ingresar un valor.")
-        return 
+        print("[!] Error al ingresar valores.")
+        return
+
 
 def unwrap_angles(vec):
     # Adjust positions within the range of -pi to pi for the robot's movement
     vec_list = list(vec)  # Convert tuple to list
 
     for i in range(3):
-        while vec_list [i] > math.pi or vec_list [i] < -math.pi :
-            if vec_list [i] > math.pi:
-                vec_list[i] -= 2*math.pi
+        while vec_list[i] > math.pi or vec_list[i] < -math.pi:
+            if vec_list[i] > math.pi:
+                vec_list[i] -= 2 * math.pi
             elif vec_list[i] < -math.pi:
-                vec_list[i] += 2*math.pi
+                vec_list[i] += 2 * math.pi
 
-    vec_modified = tuple(vec_list)  # Convert list to tuple 
+    vec_modified = tuple(vec_list)  # Convert list to tuple
     return vec_modified
 
 
 def transform_position(vec):
     # Gets joint values from the transformation service
-
     rospy.wait_for_service(TRANSFORM_SERVICE_NAME)
-    
+
     try:
-        service = rospy.ServiceProxy(TRANSFORM_SERVICE_NAME, Transform)        
+        transformation_service = rospy.ServiceProxy(TRANSFORM_SERVICE_NAME, Transform)
 
-        resp = service(vec) # Transform x, y, z position to joint angles
+        res = transformation_service(vec)  # Transform x, y, z position to joint angles
 
-        vec_joint = resp.joint_angles 
+        vec_joint = res.joint_angles
 
-        unwrap_angles(vec_joint) 
-        
+        unwrap_angles(vec_joint)
+
         return vec_joint
-        
+
     except rospy.ServiceException as e:
-        print(f"[!] Llamada al servicio fallida: {e}") 
+        print(f"[!] Llamada al servicio fallida: {e}")
 
 
-def show_menu(): 
-    print("""
+def show_menu():
+    print(
+        """
 
  .----------------.  .----------------.  .----------------.  .----------------.  .----------------.   
 | .--------------. || .--------------. || .--------------. || .--------------. || .--------------. |  
@@ -145,10 +146,13 @@ def show_menu():
 
     Ingresa "?" para ver la lista de comandos y "exit" para salir
 
-    """)
+    """
+    )
 
-def show_commands():
-    print("""
+
+def show_help():
+    print(
+        """
     
     Comando             Descripción
 
@@ -173,50 +177,50 @@ def show_commands():
         Apuntando hacia el suelo: -1.57 (-pi/2)
         Apuntando hacia el exterior:  0
         
-    """)
+    """
+    )
+
 
 def clc():
-    if os.name == 'nt':  # For Windows
-        os.system('cls')
-    else:  # For Unix (Linux, macOS)
-        os.system('clear')
+    os.system("clear")
 
-if __name__ == "__main__": 
+
+if __name__ == "__main__":
     clc()
     show_menu()
 
     while True:
         # Enter command
-        command = input("\n> ")
-        
+        command = input("\n> ").strip()
+
         # Filter commands
-        if command == 'pos' or command == 'position':
+        if command == "pos" or command == "position":
             # Enter position to send to the robot
             vec_position = input_position()
-            
+
             if vec_position != None:
                 vec_joint = transform_position(vec_position)
                 if vec_joint != None:
                     control_robot(vec_joint)
                 else:
                     print("[-] Error al transformar posicion.")
-            
-        elif command == 'home':
+
+        elif command == "home":
             # Send init pose
             print("[*] Envio posicion origen.")
             control_robot([0, 0, 0, 0])
-            
-        elif command == 'help' or command == '?':
+
+        elif command == "help" or command == "?":
             # Show menu and usage example
-            show_commands()
-        
-        elif command == 'clc':
+            show_help()
+
+        elif command == "clc":
             # clean console
             clc()
-        
-        elif command == 'exit' or command == 'q':
+
+        elif command == "exit" or command == "q":
             # Finalize program
             break
 
-        else: 
+        else:
             print("[!] Comando ingresado no reconocido")
