@@ -7,8 +7,9 @@ from openmanipulator_transformations.srv import (
     TransformRequest,
     TransformResponse,
 )
-import numpy as np
-from math import atan, atan2, cos, acos, sin, sqrt, pi
+from numpy import arctan2, array
+from numpy.linalg import norm
+from math import cos, acos, sin, pi
 
 # Computation service. Converts cartesian coordinates to joint angles using the data below
 
@@ -20,22 +21,22 @@ TRANSFORM_NODE_NAME = "transform_srv"
 # The origins of the joints are relative to the origin of the parent link
 
 # Child of link1, parent of link2. Rotates in the XY plane
-JOINT_1_ORIGIN = np.array([0.012, 0, 0.017])
+JOINT_1_ORIGIN = array([0.012, 0, 0.017])
 # Child of link2, parent of link3. Rotates in the XZ plane
-JOINT_2_ORIGIN = np.array([0, 0, 0.0595])
+JOINT_2_ORIGIN = array([0, 0, 0.0595])
 # Child of link3, parent of link4. Rotates in the XZ plane
-JOINT_3_ORIGIN = np.array([0.024, 0, 0.128])
+JOINT_3_ORIGIN = array([0.024, 0, 0.128])
 # Child of link3, parent of link5 (between joint 3 and gripper joint). Rotates in the XZ plane
-JOINT_4_ORIGIN = np.array([0.124, 0, 0])
+JOINT_4_ORIGIN = array([0.124, 0, 0])
 # Child of link5, which starts at joint4
-JOINT_END_EFFECTOR = np.array([0.126, 0, 0])
+JOINT_END_EFFECTOR = array([0.126, 0, 0])
 
 # Link2 is the one above joint1 and because of that it rotates around its longitudinal axis. It is always pointing up
-LINK_2_LONGITUDE = np.linalg.norm(JOINT_2_ORIGIN)
-LINK_3_LONGITUDE = np.linalg.norm(JOINT_3_ORIGIN)
-LINK_4_LONGITUDE = np.linalg.norm(JOINT_4_ORIGIN)
+LINK_2_LONGITUDE = norm(JOINT_2_ORIGIN)
+LINK_3_LONGITUDE = norm(JOINT_3_ORIGIN)
+LINK_4_LONGITUDE = norm(JOINT_4_ORIGIN)
 # Distance from joint 4 to the center of the end-effector (the red cube in gazebo)
-LAST_BIT_LONGITUDE = np.linalg.norm(JOINT_END_EFFECTOR)
+LAST_BIT_LONGITUDE = norm(JOINT_END_EFFECTOR)
 
 # These are the final parameters used for computation
 LINK_LONGITUDES = (
@@ -45,7 +46,7 @@ LINK_LONGITUDES = (
     LAST_BIT_LONGITUDE,
 )
 OFFSET_XYZ = tuple(JOINT_1_ORIGIN)
-aux = pi / 2 - atan(JOINT_3_ORIGIN[0] / JOINT_3_ORIGIN[2])
+aux = pi / 2 - arctan2(JOINT_3_ORIGIN[0], JOINT_3_ORIGIN[2])
 JOINT_OFFSETS = (0, -aux, aux, 0)
 REVERSED = True
 
@@ -89,7 +90,7 @@ def transform(
     # Transform (X, Y, Z, t) -> (X', Z') the coordinates in the plane formed by the joints with the origin in the first joint
     # X' being the horizontal distance from the origin to the end position
     # We are using cylindrical coordinates now
-    x_t = sqrt(x**2 + y**2)
+    x_t = norm([x, y])
     z_t = z
 
     # Solve the equation system formed by the combination of the forward kinematics transformations
@@ -101,17 +102,17 @@ def transform(
     a3 = w1**2 + w2**2 + l2**2 - l3**2
 
     # Raises ValueError if the position is out of reach
-    t1 = atan2(a2, a1) + acos(a3 / sqrt(a1**2 + a2**2))
-    t2 = atan2((w2 - l2 * sin(t1)), (w1 - l2 * cos(t1))) - t1
+    t1 = arctan2(a2, a1) + acos(a3 / norm([a1, a2]))
+    t2 = arctan2((w2 - l2 * sin(t1)), (w1 - l2 * cos(t1))) - t1
     t3 = t - t1 - t2
 
     # Transform back to cartesian coordinates and apply initial conditions
     offset_q1, offset_q2, offset_q3, offset_q4 = offset_joints
     direction = -1 if reversed else 1
-    q1 = atan2(y, x) - offset_q1
-    q2 = direction * t1 - offset_q2  #  pi/2-aux-t1
-    q3 = direction * t2 - offset_q3  # -pi/2-t2 + aux
-    q4 = direction * t3 - offset_q4  # -t3
+    q1 = arctan2(y, x) - offset_q1
+    q2 = direction * t1 - offset_q2
+    q3 = direction * t2 - offset_q3
+    q4 = direction * t3 - offset_q4
 
     return (q1, q2, q3, q4)
 
