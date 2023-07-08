@@ -1,14 +1,15 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>openmanipulator_transformations</name>
-  <version>0.0.0</version>
-  <description>The openmanipulator_transformations package</description>
+  <version>0.1.0</version>
+  <description>Control an OpenManipulator-X arm using robot kinematics</description>
 
-  <!-- One maintainer tag required, multiple allowed, one person per tag -->
-  <!-- Example:  -->
-  <!-- <maintainer email="jane.doe@example.com">Jane Doe</maintainer> -->
-  <maintainer email="tomas@todo.todo">tomas</maintainer>
+  <author email="tomasbadenes@gmail.com">Tomás Badenes</author>
+  <author email="me@juanm04.com">Juan Martín Seery</author>
+  <author email="adrielfernandez93@gmail.com">Santiago Fernandez</author>
+  <author email="lorenzomajoros@gmail.com">Lorenzo Majoros</author>
 
+  <maintainer email="tomasbadenes@gmail.com">Tomás Badenes</maintainer>
 
   <!-- One license tag required, multiple allowed, one license per tag -->
   <!-- Commonly used license strings: -->
@@ -16,12 +17,6 @@
   <license>TODO</license>
 
   <url type="repository">https://github.com/b-Tomas/robot-kinematics</url>
-
-
-  <!-- Author tags are optional, multiple are allowed, one per tag -->
-  <!-- Authors do not have to be maintainers, but could be -->
-  <!-- Example: -->
-  <!-- <author email="jane.doe@example.com">Jane Doe</author> -->
 
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>message_generation</build_depend>
