@@ -1,3 +1,6 @@
 # Python caches
 __pycache__
+# vscode files
+.vscode/
+*.code-workspace
 

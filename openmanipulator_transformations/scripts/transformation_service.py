@@ -71,7 +71,7 @@ def transform(vec: tuple, l1, l2, l3, l4, offset_x=0, offset_y=0, offset_z=0) ->
 
 def process_service_request(req: TransformRequest) -> TransformResponse:
     rospy.loginfo(f"Received request: {req}")
-    if len(req.coordinates) != 4: raise ValueError  # TODO: use a more meaningful error
+    assert len(req.coordinates) == 4, "Array length must be four"
     response = TransformResponse()
     response.joint_angles = transform(req.coordinates, L1, L2, L3, L4, OFFSET_X, OFFSET_Y, OFFSET_Z)
     rospy.loginfo(f"Generated response: {response}")
