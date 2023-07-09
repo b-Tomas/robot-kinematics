@@ -242,6 +242,10 @@ if __name__ == "__main__":
         elif command == "verbose" or command == "v":
             # change verbose mode
             verbose_mode = not verbose_mode
+            if verbose_mode:
+                print("[*] Modo descriptivo activado.")
+            else:
+                print("[*] Modo descriptivo desactivado.")
 
         elif command == "exit" or command == "q":
             # Finalize program
