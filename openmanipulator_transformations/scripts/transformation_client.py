@@ -156,10 +156,11 @@ def show_help():
     
     Comando             Descripción
 
-    help    ?           Muestra este menú
-    pos     position    Envio de posición al robot
-    home                Envio de posición original 
-    exit    q           Finalizar programa
+    help     ?          Muestra este menú
+    position pos        Envio de posición al robot
+    home                Envio de posición original
+    verbose  v          Activar o desactivar modo descriptivo 
+    exit     q          Finalizar programa
     clc                 Limpiar consola
 
     Ejemplo de uso:
@@ -188,6 +189,7 @@ def clc():
 if __name__ == "__main__":
     clc()
     show_menu()
+    verbose_mode = False
 
     while True:
         # Enter command
@@ -198,16 +200,35 @@ if __name__ == "__main__":
             # Enter position to send to the robot
             vec_position = input_position()
 
-            if vec_position != None:
-                vec_joint = transform_position(vec_position)
-                if vec_joint != None:
-                    control_robot(vec_joint)
-                else:
-                    print("[-] Error al transformar posicion.")
+            if vec_position == None:
+                print("[-] Error al ingresar posicion.")
+                continue
+
+            # Show information in description mode
+            if verbose_mode:
+                print(f"[*] Vector de posicion ingresado: {vec_position}")
+                print("[*] Envio del vector de posiciones al servicio para transformar.")
+
+            # Convert X Y Z t position to robot's angles
+            vec_joint = transform_position(vec_position)
+
+            if vec_joint == None:
+                print("[-] Error al transformar posicion.")
+                continue
+
+            # Show information in description mode
+            if verbose_mode:
+                print("[*] Vector de angulos del motor recibido.")
+                print(f"[*] Vector de posicion transformado: {vec_position}")
+                print("[*] Envio de angulos al robot.")
+
+            control_robot(vec_joint)
+        
 
         elif command == "home":
             # Send init pose
-            print("[*] Envio posicion origen.")
+            if verbose_mode:
+                print("[*] Envio posicion origen.")
             control_robot([0, 0, 0, 0])
 
         elif command == "help" or command == "?":
@@ -217,6 +238,10 @@ if __name__ == "__main__":
         elif command == "clc":
             # clean console
             clc()
+
+        elif command == "verbose" or command == "v":
+            # change verbose mode
+            verbose_mode = not verbose_mode
 
         elif command == "exit" or command == "q":
             # Finalize program
