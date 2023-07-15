@@ -1,33 +1,55 @@
-# **Posicionamiento con Transformaciones Lineales**
+# Cinemática inversa y directa aplicada
 
-## Descripción del proyecto 
-Este proyecto es el resultado de una propuesta realizada por un profesor de Matemática para demostrar una de las tantas aplicaciones que tienen las transformaciones lineales.
-Los desarrolladores del mismo, decidimos tomar la propuesta y llevarla al campo de la robótica, planteando un problema cuya base era lograr el movimiento de las articulaciones de un brazo robótico empleando dichas transformaciones.   
-    
-**Posicionamiento con Transformaciones Lineales** puede ser utilizado de manera educativa para un primer contacto con robots articulados y ver como el movimiento de los distintos rotores cambia los ejes de los demas. 
+<p align="center">
+  <img src="docs/demo.gif" />
+</p>
 
-Para lograr que el robot realizara las acciones que se le manden a través de la consola, empleamos una libreria de frameworks para el desarrollo de software de robots que es facilitada por ROS.    
 
-Se cuenta con un nodo cliente con una interfaz de usuario de tipo CLI que recibe datos ingresados por un usuario, estos se envían a un servidor que los procesa y retorna los ángulos de cada rotor del robot. 
-Los angulos que retorna el primer servidor, son recibidos por el cliente, que los envía a un segundo servidor cuyo trabajo es comunicarse con las articulaciones del robot y lograr el movimiento de las mismas a la posición deseada.    
-     
-Para lograr el movimiento de las articulaciones, se aplicaron diferentes herramientas matemáticas que nos ayudaron a modelar el brazo.
+## Descripción
 
-## Listado de tecnologias utilizadas
-- `Docker`
-- `ROS`
-- `Python`
-## Setup e instalación
+La cinemática de robots es el campo de investigación que estudia el movimiento de cadenas articuladas con múltiples grados de libertad. Este proyecto es resultado de una propuesta por parte de docentes del área de matemáticas que decidimos llevar al campo de la robótica para demostrar una de las tantas aplicaciones del algebra lineal, planteando un problema cuya base es lograr el movimiento de las articulaciones de un brazo robótico empleando transformaciones lineales.
 
-Para la instalación del simulador visite la sección correspondiente del [documento en inglés](https://github.com/b-Tomas/robot-kinematics/blob/main/README.md).
+Este proyecto puede ser utilizado de manera educativa tanto para demostrar los coneptos matemáticos relacionados con coordenadas homogéneas y [parámetros de Denavit–Hartenberg](https://en.wikipedia.org/wiki/Denavit%E2%80%93Hartenberg_parameters) como para permitir un primer contacto con la robótica utilizando una simulación del robot open-source [OpenManipulator-X](https://emanual.robotis.com/docs/en/platform/openmanipulator_x/overview/).
 
-### Listado de comandos del CLI
+<p align="center">
+  <img src="docs/diagram_annotated.png" width="500" />
+</p>
 
-|Comando             |Descripción                           |
-|:-------------------|:-------------------------------------|
-|`help`,     `?`     |Muestra este menú                     |
-|`position`, `pos`   |Envio de posición al robot            |
-|`home`              |Envio de posición original            |
-|`verbose`,  `v`     |Activar o desactivar modo descriptivo |
-|`exit`,     `q`     |Finalizar programa                    |
-|`clc`               |Limpiar consola                       |
+El trabajo de programación realizado consistió en, al entorno simulado de [OpenManipulator-X](https://emanual.robotis.com/docs/en/platform/openmanipulator_x/overview/), añadir dos componentes que implementan la solución matemática desarrollada:
+
+* **`/transformations/transform`** ROS Service: Toma como parámetro una coordenada del espacio (x, y, z) y un ángulo de agarre, y utilizando las fórmulas de cinemática inversa desarrolladas calcula los parámetros del robot, o ánglos de las articulaciones, para que la posición de el _end-effector_ coincida con los parámetros dados.
+*  **`Client CLI`**: Es la interfaz que utilizará el usuario para interactuar con el servicio anterior y luego enviar los resultados al controlador del robot.
+
+Estos componentes son parte del paquete de ROS `openmanipulator_transformations` provisto en este repositorio.
+
+El desarrollo matemático del proceso se encuentra en TODO: Provide original PDF file without student ids
+
+## Configuración del entorno y utilización
+
+TODO: Either copy and translate the `Building the workspace` section from PR #22 or add a link to it.
+
+Para lanzar la simulación, en diferentes paneles de tmux ejecute:
+```sh
+# Launch simulation, GUI and transformations server
+roslaunch openmanipulator_transformations transformations.launch
+# Launch the CLI
+roslaunch openmanipulator_transformations cli.launch
+```
+
+Esto lanzará la simulación en Gazebo, la visualización en RViz, el controlador del robot y una herramienta gráfica para ver y enviar parámetros del robot, además del servicio de transformaciones y la CLI de este paquete, en la que podrá ejecutar el comando `?` para obtener información sobre su utilización.
+
+<p align="center">
+  <img src="docs/cli.png" />
+</p>
+
+Antes de enviar una posición, inicie la simulación en Gazebo con el botón ▶️ y en la ventana `OpenManipulator control GUI` haga click en el botón `Timer Start`.
+
+Luego, envie la posición objectivo (0.1, 0.1, 0.2, 0.0) (las unidades de distancia se encuentran en metros y los ángulos en radianes) y observer en la ventana de control que la posición final del _end-effector_ es la enviada.
+
+## Autores
+
+Este trabajo fue realizado por los estudiantes de Ingeniería en Computación
+* Tomás Badenes
+* Juan Martín Seery
+* Santiago Adriel Fernández
+* Lorenzo Majoros
