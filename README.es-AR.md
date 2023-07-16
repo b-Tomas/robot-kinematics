@@ -68,7 +68,8 @@ _end-effector_ es la enviada.
 
 ## Autores
 
-Este trabajo fue realizado por los estudiantes de [Ingeniería en Computación](https://ic.info.unlp.edu.ar/) de las facultades de Ingeniería e Informática de la [Universidad Nacional de La Plata](https://unlp.edu.ar):
+Este trabajo fue realizado por los estudiantes de [Ingeniería en Computación](https://ic.info.unlp.edu.ar/)
+de las facultades de Ingeniería e Informática de la [Universidad Nacional de La Plata](https://unlp.edu.ar):
 
 - Tomás Badenes
 - Juan Martín Seery
