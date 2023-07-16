@@ -1,3 +1,9 @@
+<!--
+Based on https://github.com/Ekumen-OS/andino/blob/5236b1132343539e19c2eb63c61e5f5f7814555b/docker/README.md
+From Ekumen-OS/andino project
+Copyright (c) 2023, Ekumen Inc., under BSD 3-Clause License
+-->
+
 # Docker setup
 
 ## Prerequisites
