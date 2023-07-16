@@ -9,7 +9,7 @@
 La cinemática de robots es el campo de investigación que estudia el movimiento de cadenas
 articuladas con múltiples grados de libertad. Este proyecto es resultado de una propuesta
 por parte de docentes del área de matemáticas que decidimos llevar al campo de la robótica
-para demostrar una de las tantas aplicaciones del algebra lineal, planteando un problema
+para demostrar una de las tantas aplicaciones del álgebra lineal, planteando un problema
 cuya base es lograr el movimiento de las articulaciones de un brazo robótico empleando
 transformaciones lineales.
 
@@ -62,13 +62,13 @@ utilización.
 Antes de enviar una posición, inicie la simulación en Gazebo con el botón ▶️ y en la ventana
 `OpenManipulator control GUI` haga click en el botón `Timer Start`.
 
-Luego, envie la posición objectivo (0.1, 0.1, 0.2, 0.0) (las unidades de distancia se encuentran en
-metros y los ángulos en radianes) y observer en la ventana de control que la posición final del
+Luego, envíe la posición objetivo (0.1, 0.1, 0.2, 0.0) (las unidades de distancia se encuentran en
+metros y los ángulos en radianes) y observe en la ventana de control que la posición final del
 _end-effector_ es la enviada.
 
 ## Autores
 
-Este trabajo fue realizado por los estudiantes de Ingeniería en Computación
+Este trabajo fue realizado por los estudiantes de [Ingeniería en Computación](https://ic.info.unlp.edu.ar/) de las facultades de Ingeniería e Informática de la [Universidad Nacional de La Plata](https://unlp.edu.ar):
 
 - Tomás Badenes
 - Juan Martín Seery
