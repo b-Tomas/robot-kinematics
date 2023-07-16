@@ -1,0 +1,30 @@
+wangrobotics:
+  type: Web
+  title: Modeling, Motion Planning, and Control of Manipulators and Mobile Robots
+  publisher: Clemson University Open Textbooks
+  date: 2023-03-21
+  author:
+    - Lunia, Akshit
+    - Stevens, Ashley
+    - Holt, Cavender
+    - Morgan, Rhyan
+    - Norris, Joshua
+    - Poyyamozhi, Shailendran
+    - Zhong, Yehua
+  url: https://opentextbooks.clemson.edu/wangrobotics
+
+cox_little_oshea:
+  type: Book
+  title: Ideals, Varieties, and Algorithms
+  publisher: Springer International Publishing
+  author:
+    - Cox, David A.
+    - Little, John
+    - O'Shea, Donal
+  date: 2015
+  edition: 4
+  page-total: 646
+  doi: "10.1007/978-3-319-16721-3"
+  parent:
+    type: Anthology
+    title: Undergraduate Texts in Mathematics
