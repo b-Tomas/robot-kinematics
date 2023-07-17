@@ -15,7 +15,7 @@ from kinematics import (
     OFFSET_XYZ,
     TRANSFORM_NODE_NAME,
     TRANSFORM_SERVICE_NAME,
-    transformation,
+    inverse_transform,
 )
 
 """
@@ -59,7 +59,7 @@ def transform(
     z = z - l1 - offset_z
 
     # Obtain the parameters for a fully extended robot
-    t1, t2, t3, t4 = transformation((x, y, z, t), seg_longitudes)
+    t1, t2, t3, t4 = inverse_transform((x, y, z, t), seg_longitudes)
 
     # Transform back to cartesian coordinates and apply initial conditions
     offset_q1, offset_q2, offset_q3, offset_q4 = offset_joints
