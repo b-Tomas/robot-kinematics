@@ -329,7 +329,7 @@ $
   r   &= ±sqrt(x^2 + y^2) - L_4cos(omega) \
   h   &= L_1 - z - L_4sin(omega) \
   \
-  q_2 &= arctan(frac(h, r)) + phi ± arccos(frac(r^2 + h^2 + L_2^2 - L_3^2, 2L_2 sqrt(r^2 + h^2))) \
+  q_2 &= phi + arctan(frac(h, r)) ± arccos(frac(r^2 + h^2 + L_2^2 - L_3^2, 2L_2 sqrt(r^2 + h^2))) \
   q_3 &= arctan(frac(h-L_2sin(q_2 - phi), r-L_2cos(q_2 - phi))) - q_2 \
   q_4 &= omega - q_2 - q_3
 $
