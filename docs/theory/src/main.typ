@@ -327,10 +327,10 @@ $
 
 $
   r   &= ±sqrt(x^2 + y^2) - L_4cos(omega) \
-  h   &= L_1 - L_4cos(omega) - z \
+  h   &= L_1 - L_4sin(omega) - z \
   \
-  q_2 &= arctan(frac(z, r)) + phi ± arccos(frac(r^2 + z^2 + L_2^2 - L_3^2, sqrt(r^2 + z^2))) \
-  q_3 &= arctan(frac(z-L_2sin(q_2 - phi), r-L_2cos(q_2 - phi))) - q_2 \
+  q_2 &= arctan(frac(h, r)) + phi ± arccos(frac(r^2 + h^2 + L_2^2 - L_3^2, sqrt(r^2 + h^2))) \
+  q_3 &= arctan(frac(h-L_2sin(q_2 - phi), r-L_2cos(q_2 - phi))) - q_2 \
   q_4 &= omega - q_2 - q_3
 $
 
@@ -338,7 +338,7 @@ Esto no queda de forma matricial porque las soluciones no siempre son únicas y 
 
 Así, para aplicar los contenidos tratados, planteamos controlar una simulación del robot OpenMANIPULATOR-X a partir del desarrollo obtenido anteriormente.
 
-= Simulando el robot 
+= Simulando el robot
 
 El proyecto práctico realizado aplicando la teoría anterior se basa en ROS #footnote(underline(link("https://www.ros.org"))) (_Robot Operating System_), un set de herramientas ampliamente utilizado en el campo de la robótica para el desarrollo de software. Se creó un entorno basado en Docker para facilitar la portabilidad del proyecto en el que se incluye la simulación en Gazebo #footnote(underline(link("https://gazebosim.org/home"))) provista por Robotis y el programa que se desarrolló.
 
