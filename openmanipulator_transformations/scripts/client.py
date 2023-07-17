@@ -3,18 +3,18 @@
 import math
 import os
 import rospy
-from open_manipulator_msgs.srv import SetJointPosition, SetJointPositionRequest
+
 from open_manipulator_msgs.msg import JointPosition
+from open_manipulator_msgs.srv import SetJointPosition, SetJointPositionRequest
+
 from openmanipulator_transformations.srv import Transform
+from kinematics import ROBOT_CONTROL_SERVICE_NAME, TRANSFORM_SERVICE_NAME
 
 """
 Command-line interface for controlling the OpenManipulator-X robot arm by reading position commands 
 in cartesian coordinates from user input, transforming them to robot parameters using the 
 inverse-kinematics service and sending the paramters to the robot controller
 """
-
-ROBOT_CONTROL_SERVICE_NAME = "/goal_joint_space_path"
-TRANSFORM_SERVICE_NAME = "/transformations/transform"
 
 
 def control_robot(
@@ -223,7 +223,6 @@ if __name__ == "__main__":
                 print("[*] Envio de angulos al robot.")
 
             control_robot(vec_joint)
-        
 
         elif command == "home":
             # Send init pose
