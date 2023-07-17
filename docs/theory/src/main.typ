@@ -140,7 +140,12 @@ $
      )
 $
 
-La ventaja de este método es que los parámetros son fáciles de obtener #footnote[Una visualización del método de obtención de estos parámetros se puede encontrar en #underline(link("https://youtu.be/rA9tm0gTln8", "youtu.be/rA9tm0gTln8")).] y el método sirve para la gran mayoría de casos.
+La ventaja de este método es que los parámetros son fáciles de obtener. Al momento de modelar, se piensa gráficamente qué rotaciones y traslaciones nos permiten transformar el origen de un sistema de referencia en otro. Particularmente, se suele pensar en la secuencia
+1. rotación en torno al eje $z$ ($theta_i$),
+2. traslación sobre el eje $z$ ($d_i$),
+3. traslación sobre el eje $x$ ($r_i$)
+4. y rotación en torno al eje $x$ ($alpha_i$)
+que sufre el origen de ${i-1}$ para transformarse en el origen de ${i}$ #footnote[Una visualización del método de obtención de estos parámetros se puede encontrar en #underline(link("https://youtu.be/rA9tm0gTln8", "youtu.be/rA9tm0gTln8")).]. Nótese que la matriz que se obtiene es exactamente la inversa de esta transformación.
 
 Ahora, estas matrices #T son estáticas. Se necesita que varíen según ángulos arbritarios. Las articulaciones del robot _OpenManipulator X_, como se planteó anteriormente, solamente rotan. Se puede plantear que todos nuestros motores rotan en torno a sus respectivos ejes $z$ y que sus matrices sean
 
@@ -160,65 +165,78 @@ siendo $q_i$ los parámetros del robot y $theta_i$ las condiciones iniciales.
   ],
 )
 
-El robot consta de cuatro rotores. Estos se han modelado de tal forma que sus parámetros de Denavit–Hartenberg son los siguientes:
+El robot consta de cuatro rotores. Así, los parámetros de Denavit–Hartenberg se pueden pensar gráficamente de la siguiente manera:
+
+1. El primer rotor rota en torno al eje $z$ de la base, por lo que $theta_1 = q_1$ variable. Luego, se traslada $L_1$ sobre el eje $z$ para ubicarse en el origen del siguiente rotor, por lo que $d_1 = L_1$ constante. Como no hay traslaciones sobre el eje $x$, $r_1 = 0$. Finalmente, como el eje de rotación del siguiente rotor es paralelo la piso, se realiza una rotación de $-frac(pi, 2)$ sobre el eje $x$ para que el eje $z$ (eje sobre el que se rotará el siguiente rotor) quede paralelo al piso, por lo que $alpha_1 = -frac(pi,2)$ constante. Nótese que también se podría rotar sobre $frac(pi, 2)$, pero se eligió esta configuración porque el modelo del brazo, como se muestra en la figura, rota con ángulos positivos de manera horaria.
+2. El segundo rotor también rotará en torno a su eje $z$, por lo que $theta_2 = q_2$ variable. Sin embargo, tal y como están planteados los ejes, la posición inicial del segmento 2 es paralelo al plano, por lo que hay que "levantarlo" para que quede como en la figura. Así, se agrega un desface $phi > 0$ tal que $theta_2 = q_2 - phi$. A simple vista, se aprecia que $phi approx frac(pi,2)$, y la medida exacta se obtiene experimentalmente. Como el origen del próximo rotor está sobre el mismo plano que este, el eje $z$ se mantiene tal cual, por lo que $d_2 = alpha_2 = 0$. Finalmente, se traslada $L_2$ sobre el eje $x$ para ubicarse en el origen del siguiente rotor, por lo que $r_2 = L_2$ constante.
+3. Similarmente, el tercer rotor también rotará en torno a su eje $z$, por lo que $theta_3 = q_3$ variable. También se tiene en cuenta el desface anteriormente mencionado, solo que esta vez se aplica su opuesto, quedando $theta_3 = q_3 + phi$. Como el origen del próximo rotor está sobre el mismo plano que este, el eje $z$ se mantiene tal cual, por lo que $d_3 = alpha_3 = 0$. Finalmente, se traslada $L_3$ sobre el eje $x$ para ubicarse en el origen del siguiente rotor, por lo que $r_3 = L_3$ constante.
+4. Por último, el cuarto rotor también rotará en torno a su eje $z$, por lo que $theta_4 = q_4$ variable. Ahora, para llegar al _end-effector_ (que no es más que un punto arbritario, no un rotor), solo hace falta trasladarse $L_4$ sobre el eje $x$, por lo que $r_4 = L_4$ constante y $d_4 = alpha_4 = 0$. 
 
 #figure(
   table(
     columns: (auto, auto, auto, auto, auto),
     inset: 10pt,
     align: center,
-    [*Enlace*], $d_i$, $theta_i$, $r_i$, $alpha_i$,
-    [1], $L_1$, $q_1$, $0$, $frac(pi,2)$,
-    [2], $0$, $q_2 + frac(pi, 2)$, $L_2$, $0$,
-    [3], $0$, $q_3 - frac(pi, 2)$, $L_3$, $0$,
-    [4], $0$, $q_4$, $L_4$, $0$,
+    [*Enlace*], $theta_i$,            $d_i$,  $r_i$,  $alpha_i$,
+    [1],        $q_1$,                $L_1$,  $0$,    $-frac(pi,2)$,
+    [2],        $q_2 - phi$,  $0$,    $L_2$,  $0$,
+    [3],        $q_3 + phi$,  $0$,    $L_3$,  $0$,
+    [4],        $q_4$,                $0$,    $L_4$,  $0$,
   ),
-  caption: [Parámetros de Denavit–Hartenberg.]
+  caption: [Parámetros de Denavit–Hartenberg obtenidos.]
 )
-siendo $L_i$ la longitud del segmento _i_.
 
 Así, cada una de las matrices intermedias quedan
 
 $
-T^1_0 (q_1) = T_(r z)(q_1)T_(z)(L_1)T_(r x)(frac(pi,2)) =mat(
-  cos(q_1), 0, sin(q_1),  0;
-  sin(q_1), 0, -cos(q_1), 0;
-  0,        1, 0,         L_1;
-  0,        0, 0,         1;
-)
+  T^1_0 (q_1) = 
+  T_(r z)(q_1) T_(z)(L_1) T_(r x)(-frac(pi,2)) =
+  mat(
+    cos(q_1),  0, -sin(q_1),   0;
+    sin(q_1),  0,  cos(q_1),   0;
+           0, -1,         0, L_1;
+           0,  0,         0,   1;
+  )
 $
 
 $
-T^2_1 (q_2) = T_(r z)(q_2 + frac(pi,2))T_(x)(L_2) =mat(
-  -sin(q_2), -cos(q_2), 0, -L_2sin(q_2);
-  cos(q_2),  -sin(q_2), 0, L_2cos(q_2);
-  0,         0,         1, 0;
-  0,         0,         0, 1;
-)
+  T^2_1 (q_2) =
+  T_(r z) (q_2-phi)T_(x) (L_2) =
+  mat(
+    cos(q_2-phi), -sin(q_2-phi), 0, L_2cos(q_2-phi);
+    sin(q_2-phi),  cos(q_2-phi), 0, L_2sin(q_2-phi);
+               0,             0, 1,               0;
+               0,             0, 0,               1;
+  )
 $
 
 $
-T^3_2 (q_3) = T_(r z)(q_3 - frac(pi,2))T_(x)(L_3) =mat(
-  sin(q_3), cos(q_3), 0, L_3sin(q_3);
-  -cos(q_3),  sin(q_3), 0, -L_3cos(q_3);
-  0,         0,         1, 0;
-  0,         0,         0, 1;
-)
+  T^3_2 (q_3) =
+  T_(r z) (q_3+phi)T_(x) (L_3) =
+  mat(
+    cos(q_3+phi), -sin(q_3+phi), 0, L_3cos(q_3+phi);
+    sin(q_3+phi),  cos(q_3+phi), 0, L_3sin(q_3+phi);
+               0,             0, 1,               0;
+               0,             0, 0,               1;
+  )
 $
 
 $
-T^4_3 (q_4) = T_(r z)(q_4)T_(x)(L_4) =mat(
-  cos(q_4), -sin(q_4), 0, L_4cos(q_4);
-  sin(q_4), cos(q_4),  0, L_4sin(q_4);
-  0,        0,         1, 0;
-  0,        0,         0, 1;
-)
+  T^4_3 (q_4) =
+  T_(r z) (q_4)T_(x) (L_4) =
+  mat(
+    cos(q_4), -sin(q_4), 0, L_4cos(q_4);
+    sin(q_4),  cos(q_4), 0, L_4sin(q_4);
+           0,         0, 1,           0;
+           0,         0, 0,           1;
+  )
 $
 
 Luego de todo esto, finalmente se puede obtener la posición del _end-effector_ con la función:
 
 $
-  P(q_1, q_2, q_3, q_4) = (T^1_0 (q_1) space T^2_1 (q_2) space T^3_2 (q_3) space T^4_3 (q_4)) space (0,0,0,1)^T
+  P(q_1, q_2, q_3, q_4) &= (T^1_0 (q_1) space T^2_1 (q_2) space T^3_2 (q_3) space T^4_3 (q_4)) space (0,0,0,1)^T \
+  &= T^4_0 (q_1,q_2,q_3,q_4) space (0,0,0,1)^T 
 $
 
 = Inverse kinematics -- Obteniendo los parámetros
@@ -231,48 +249,88 @@ En el caso del _OpenManipulator X_, se logró obtener una solución analítica.
 
 == Obteniendo la solución
 
-Este problema se puede dividir en dos problemas más sencillos. El ángulo de la primera articulación $q_1$, la que está en la base, solo depende las coordenadas $x$ e $y$. Particularmente,
-
-$
-  q_1 = arctan(frac(y,x))
-$
-
-Para el resto de ángulos $q_2$, $q_3$ y $q_3$, se puede aprovechar el hecho de que los tres se mueven sobre un mismo plano perpendicular al plano $x y$. Así, podemos hacer un cambio de variables:
-
-$
-  x' &= sqrt(x^2 + y^2) \
-  y' &= z
-$
-
-Así podemos obtener la matriz de tranformación $T^n_1$ a partir de los parámetros de Denavit–Hartenberg presentados en la tabla 1, (obviando $T^1_0$) pero modificada para que funcione con vectores de $RR^2$ en la base dada por los ejes $x'$ e $y'$.
+Para empezar, se obtiene la forma analítica de $T^4_0$, que se puede dividir en dos partes más sencillas: $T^4_0 = T^1_0 space T^4_1$. $T^4_1$, haciendo un poco de trigonometría, se obtiene:
 
 $
   omega = q_2 + q_3 + q_4
   \
-  T^n_1'(q_2,q_3,q_4) = mat(
-    cos(omega), -sin(omega), L_2cos(q_2) + L_3cos(q_2+q_3) + L_4cos(omega);
-    sin(omega),  cos(omega), L_2sin(q_2) + L_3sin(q_2+q_3) + L_4sin(omega);
-                   0,                 0,                                                   1;
+  T^4_1(q_2,q_3,q_4) = mat(
+    cos(omega), -sin(omega), 0, L_2cos(q_2-phi) + L_3cos(q_2+q_3) + L_4cos(omega);
+    sin(omega),  cos(omega), 0, L_2sin(q_2-phi) + L_3sin(q_2+q_3) + L_4sin(omega);
+             0,           0, 1,                                                 0;
+             0,           0, 0,                                                 1;
   )
+$
+
+Multiplicando por $T^1_0$ se obtiene
+
+$
+  T^4_0(q_1,q_2,q_3,q_4) = \
+  mat(
+    cos(q_1)cos(omega), -cos(q_1)sin(omega), -sin(q_1), L_2cos(q_1)cos(q_2-phi) + L_3cos(q_1)cos(q_2+q_3) + L_4cos(q_1)cos(omega);
+    sin(q_1)cos(omega), -sin(q_1)sin(omega),  cos(q_1), L_2sin(q_1)cos(q_2-phi) + L_3sin(q_1)cos(q_2+q_3) + L_4sin(q_1)cos(omega);
+           -sin(omega),         -cos(omega),         0,                   L_1 - L_2sin(q_2-phi) - L_3sin(q_2+q_3) - L_4sin(omega);
+                     0,                   0,         0,                                                                         1;
+  )
+$
+
+Esta monstruosidad que se sale de los márgenes del papel es la matriz de transformación que nos permite permite obtener la posición del _end-effector_ a partir de los parámetros del robot (la función $P(q_1,q_2,q_3,q_4)$ definida más arriba). Particularmente, nos queda la siguiente solución:
+
+$
+  vec(x,y,z,1) = T^4_0(q_1,q_2,q_3,q_4) vec(0,0,0,1) = vec(
+    cos(q_1)(L_2cos(q_2-phi) + L_3cos(q_2+q_3) + L_4cos(omega)),
+    sin(q_1)(L_2cos(q_2-phi) + L_3cos(q_2+q_3) + L_4cos(omega)),
+    L_1 - L_2sin(q_2-phi) - L_3sin(q_2+q_3) - L_4sin(omega),
+    1
+  )
+$
+
+Además de las coordenadas $(x,y,z)$ que se quieren alcanzar, para resolver el sistema de ecuaciones también tendremos el ángulo de ataque del brazo. Esto es, cuando el robot se mueva a un punto, puede llegar a este de varios ángulos distintos. No casualmente, este ángulo será $omega$. Gráficamente, se puede deducir que $omega = q_2 + q_3 + q_4$, es decir, la suma de todas las rotaciones. Además, como $q_1$ solo rota sobre el eje $z$ no afecta a este ángulo. (Nótese que $omega$ positivo es cuando el _end-effector_ rota en sentido horario, y negativo cuando rota en sentido antihorario.)
+
+Así, nos queda el sistema de ecuaciones:
+
+$
+  vec(x,y,z,omega) = vec(
+    cos(q_1)(L_2cos(q_2-phi) + L_3cos(q_2+q_3) + L_4cos(omega)),
+    sin(q_1)(L_2cos(q_2-phi) + L_3cos(q_2+q_3) + L_4cos(omega)),
+    L_1 - L_2sin(q_2-phi) - L_3sin(q_2+q_3) - L_4sin(omega),
+    q_2 + q_3 + q_4,
+  )
+$
+
+Dividiendo las primeras dos ecuaciones, se obtiene
+
+$
+  frac(y,x) &= frac(sin(q_1),cos(q_1)) = tan(q_1) \
+        q_1 &= arctan(frac(y,x))
+$
+
+Obtenido $q_1$ #footnote[Al momento de obtener el $q_1$ computacionalmente, se utiliza la función #text(font: "Cascadia Mono", "atan2(y,x)") que tiene en consideración el caso $x=0$ y retorna el ángulo correspondiente a su lugar en el plano en vez de un ángulo entre $-pi/2$ y $pi/2$.], veremos que lo podemos eliminar del sistema de la siguiente manera:
+
+$
+  sqrt(x^2 + y^2) &= sqrt((cos(q_1)^2 + sin(q_1)^2)(L_2cos(q_2-phi) + L_3cos(q_2+q_3) + L_4cos(omega))^2) \
+                  &= sqrt((L_2cos(q_2-phi) + L_3cos(q_2+q_3) + L_4cos(omega))^2) \
+ ±sqrt(x^2 + y^2) &= L_2cos(q_2-phi) + L_3cos(q_2+q_3) + L_4cos(omega)
+$
+
+Así, el se redujo el sistema a
+
+$
+  cases(
+    ±sqrt(x^2 + y^2) &= L_2cos(q_2-phi) + L_3cos(q_2+q_3) + L_4cos(omega),
+    z &= L_1 - L_2sin(q_2-phi) - L_3sin(q_2+q_3) - L_4sin(omega),
+    omega &= q_2 + q_3 + q_4,
+  )
+$
+
+¡que no es más que un problema de $RR^2$! Lo cual tiene sentido, ya que los rotores 2, 3 y 4 están contenidos en un mismo plano. Resolviendo el sistema con métodos trigonométricos #footnote[Una explicación paso a paso puede verse en #underline(link("https://youtu.be/1-FJhmey7vk", "youtu.be/1-FJhmey7vk")).], los ángulos finales quedan:
+
+$
+  r   &= ±sqrt(x^2 + y^2) - L_4cos(omega) \
+  h   &= L_1 - L_4cos(omega) - z \
   \
-  bold(upright(v)) = T^n_1'(q_2,q_3,q_4) dot (x',y',1)^T
-$
-
-$omega$ representa el ángulo de ataque del robot. Así, nos queda un sistema de tres incógnitas:
-
-$
-  omega &= q_2 + q_3 + q_4 \
-  x'    &= L_2cos(q_2) + L_3cos(q_2+q_3) + L_4cos(omega) \
-  y'    &= L_2sin(q_2) + L_3sin(q_2+q_3) + L_4sin(omega) 
-$
-
-Resolviendo #footnote[Una explicación paso a paso puede verse en #underline(link("https://youtu.be/1-FJhmey7vk", "youtu.be/1-FJhmey7vk")).], los ángulos finales quedan
-
-$
-  x'' &= x'-L_4cos(omega) \
-  y'' &= y'-L_4sin(omega) \
-  q_2 &= arctan(frac(y'', x'')) ± arccos(frac((x'')^2 + (y'')^2 + (L_2)^2 - (L_3)^2, sqrt((x'')^2 + (y'')^2))) \
-  q_3 &= arctan(frac(y''-L_2sin(q_2), x''-L_2cos(q_2))) - q_2 \
+  q_2 &= arctan(frac(z, r)) + phi ± arccos(frac(r^2 + z^2 + L_2^2 - L_3^2, sqrt(r^2 + z^2))) \
+  q_3 &= arctan(frac(z-L_2sin(q_2 - phi), r-L_2cos(q_2 - phi))) - q_2 \
   q_4 &= omega - q_2 - q_3
 $
 
@@ -287,5 +345,7 @@ El proyecto práctico realizado aplicando la teoría anterior se basa en ROS #fo
 Este programa es un CLI (_command-line interface_) permite el ingreso de coordenadas cartesianas que son transformadas a parámetros y enviadas al robot. Esta CLI puede ser utilizada tanto para controlar el robot simulado como un robot real. La función de ingreso de posición recibe cuatro datos, la posición en los ejes $x$, $y$ y $z$ y el ángulo del _end-effector_ al momento de llegar a la posición destino.
 
 El proyecto desarrollado incluyendo el entorno de simulación se encuentra disponible en #link("https://github.com/b-Tomas/robot-kinematics", "github.com/b-Tomas/robot-kinematics") de manera abierta.
+
+#v(2cm)
 
 #bibliography(style: "apa", "bibliography.yml")
