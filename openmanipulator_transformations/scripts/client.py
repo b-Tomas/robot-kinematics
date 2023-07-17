@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
 
-import math
 import os
+
 import rospy
-from open_manipulator_msgs.srv import SetJointPosition, SetJointPositionRequest
+from kinematics.config import ROBOT_CONTROL_SERVICE_NAME, TRANSFORM_SERVICE_NAME
+from kinematics.utils import unwrap_angles
+
 from open_manipulator_msgs.msg import JointPosition
+from open_manipulator_msgs.srv import SetJointPosition, SetJointPositionRequest
+
 from openmanipulator_transformations.srv import Transform
 
 """
@@ -12,9 +16,6 @@ Command-line interface for controlling the OpenManipulator-X robot arm by readin
 in cartesian coordinates from user input, transforming them to robot parameters using the 
 inverse-kinematics service and sending the paramters to the robot controller
 """
-
-ROBOT_CONTROL_SERVICE_NAME = "/goal_joint_space_path"
-TRANSFORM_SERVICE_NAME = "/transformations/transform"
 
 
 def control_robot(
@@ -81,21 +82,6 @@ def input_position():
         return
 
 
-def unwrap_angles(vec):
-    # Adjust positions within the range of -pi to pi for the robot's movement
-    vec_list = list(vec)  # Convert tuple to list
-
-    for i in range(3):
-        while vec_list[i] > math.pi or vec_list[i] < -math.pi:
-            if vec_list[i] > math.pi:
-                vec_list[i] -= 2 * math.pi
-            elif vec_list[i] < -math.pi:
-                vec_list[i] += 2 * math.pi
-
-    vec_modified = tuple(vec_list)  # Convert list to tuple
-    return vec_modified
-
-
 def transform_position(vec):
     # Gets joint values from the transformation service
     rospy.wait_for_service(TRANSFORM_SERVICE_NAME)
@@ -107,7 +93,7 @@ def transform_position(vec):
 
         vec_joint = res.joint_angles
 
-        unwrap_angles(vec_joint)
+        unwrap_angles(list(vec_joint))
 
         return vec_joint
 
@@ -223,7 +209,6 @@ if __name__ == "__main__":
                 print("[*] Envio de angulos al robot.")
 
             control_robot(vec_joint)
-        
 
         elif command == "home":
             # Send init pose

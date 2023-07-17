@@ -7,7 +7,8 @@ from openmanipulator_transformations.srv import Transform
 # Use as a python script
 # Call the transformations server and print the result
 
-TRANSFORM_SERVICE_NAME = "/transformations/transform"
+TRANSFORM_SERVICE_NAME = "/kinematics/inverse_transformation"
+
 
 def transform_client(vec):
     rospy.wait_for_service(TRANSFORM_SERVICE_NAME)

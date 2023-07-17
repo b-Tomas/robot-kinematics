@@ -1,14 +1,16 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(openmanipulator_transformations)
 
-## Find catkin macros and libraries
-## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
-## is used, also find other catkin packages
+## Find catkin macros and libraries, and other packages
 find_package(catkin REQUIRED COMPONENTS
   rospy
   std_msgs
   message_generation
+  open_manipulator_msgs
 )
+
+## Run python setup.py
+catkin_python_setup()
 
 ## Generate services in the 'srv' folder
 add_service_files(
@@ -22,11 +24,10 @@ generate_messages(
   std_msgs
 )
 
-## Mark executable scripts (Python etc.) for installation
-## in contrast to setup.py, you can choose the destination
-catkin_install_python(PROGRAMS
-  scripts/transformation_service.py
-  scripts/transformation_client.py
+## Mark executable scripts for installation
+install(PROGRAMS
+  nodes/inverse_kinematics_srv.py
+  scripts/client.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
