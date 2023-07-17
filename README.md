@@ -68,7 +68,7 @@ And then run our nodes with:
 
 ```sh
 # Math service
-rosrun openmanipulator_transformations transformation_service.py
+rosrun openmanipulator_transformations inverse_kinematics_srv.py
 # CLI client
-rosrun openmanipulator_transformations transformation_client.py
+rosrun openmanipulator_transformations client.py
 ```
