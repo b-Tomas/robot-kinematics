@@ -1,22 +1,16 @@
 #!/usr/bin/env python3
 
 import rospy
-
-from numpy import arctan2, cos, arccos, sin
-
-from openmanipulator_transformations.srv import (
-    Transform,
-    TransformRequest,
-    TransformResponse,
-)
-from kinematics import (
-    LINK_LONGITUDES,
+from kinematics.config import (
     JOINT_OFFSETS,
+    LINK_LONGITUDES,
     OFFSET_XYZ,
     TRANSFORM_NODE_NAME,
     TRANSFORM_SERVICE_NAME,
-    inverse_transform,
 )
+from kinematics.utils import inverse_transform
+
+from openmanipulator_transformations.srv import Transform, TransformRequest, TransformResponse
 
 """
 Inverse kinematics computation service. Converts cartesian coordinates to joint angles using the parameters in config.py

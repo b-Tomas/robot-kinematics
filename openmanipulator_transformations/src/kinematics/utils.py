@@ -1,4 +1,4 @@
-from numpy import arctan2, cos, arccos, sin
+from numpy import arctan2, cos, arccos, sin, pi
 from numpy.linalg import norm
 
 
@@ -50,3 +50,16 @@ def inverse_transform(
 def forward_transformation():
     # TODO
     pass
+
+
+def unwrap_angles(vec: list) -> list:
+    # Adjust positions within the range of -pi to pi for the robot's movement
+
+    for i in range(len(vec)):
+        while vec[i] > pi or vec[i] < -pi:
+            if vec[i] > pi:
+                vec[i] -= 2 * pi
+            elif vec[i] < -pi:
+                vec[i] += 2 * pi
+
+    return vec
