@@ -313,7 +313,7 @@ $
  ±sqrt(x^2 + y^2) &= L_2cos(q_2-phi) + L_3cos(q_2+q_3) + L_4cos(omega)
 $
 
-Así, el se redujo el sistema a
+Así, se reduce el sistema a
 
 $
   cases(
