@@ -85,8 +85,8 @@ utilización.
   <img src="docs/cli.png" />
 </p>
 
-Antes de enviar una posición, inicie la simulación en Gazebo con el botón ▶️ y en la ventana
-`OpenManipulator control GUI` haga click en el botón `Timer Start`.
+Antes de enviar una posición, haga click en el botón `Timer Start` en la ventana
+`OpenManipulator control GUI`.
 
 Luego, envíe la posición objetivo (0.1, 0.1, 0.2, 0.0) (las unidades de distancia se encuentran en
 metros y los ángulos en radianes) y observe en la ventana de control que la posición final del
