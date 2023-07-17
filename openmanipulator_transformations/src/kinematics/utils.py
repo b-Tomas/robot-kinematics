@@ -1,4 +1,4 @@
-from numpy import arctan2, cos, arccos, sin, pi
+from numpy import arccos, arctan2, cos, pi, sin
 from numpy.linalg import norm
 
 
