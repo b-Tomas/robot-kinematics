@@ -75,3 +75,5 @@ de las facultades de Ingeniería e Informática de la [Universidad Nacional de L
 - Juan Martín Seery
 - Santiago Adriel Fernández
 - Lorenzo Majoros
+
+Se recomienda revisar la carpeta [`docs/theory/`](https://github.com/b-Tomas/robot-kinematics/tree/main/docs/theory) con el desarrollo matemático del proyecto.
