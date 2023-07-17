@@ -39,7 +39,33 @@ El desarrollo matemático del proceso se encuentra en el documento [`docs/Cinem�
 
 ## Configuración del entorno y utilización
 
-TODO: Either copy and translate the `Building the workspace` section from PR #22 or add a link to it.
+Se recomienda utilizar la configuración de Docker proporcionada. Para obtener instrucciones sobre cómo construir y ejecutar el entorno de Docker, válido tanto para sistemas basados en Linux como en Windows, lea las instrucciones en [`/docker/README.md`](https://github.com/b-Tomas/robot-kinematics/blob/main/docker/README.md).
+
+En caso de que se desee ejecutar el proyecto de una manera diferente, se debe asegurar de cumplir con los siguientes requisitos:
+* Ubuntu 20.04
+* ROS Noetic Ninjemys
+* Las dependencias listadas en `docker/requirements.txt` instaladas.
+
+Una vez cumplidas dependencias de sistema, desde el interior del contenedor, navegar hasta la carpeta `openmanipulator_x` y clonar los repositorios de _OpenManipulator_ utilizando `vsctool`:
+
+```sh
+cd ~/ws/src/robot-transformations/openmanipulator_x
+vcs import < robotis.repos
+```
+
+Luego construya el proyecto:
+
+```sh
+cd ~/ws/
+catkin_make
+```
+
+Active el overlay (recuerde ejecutar este paso para cada nueva sesión de bash que interactúe con estos paquetes):
+
+```sh
+cd ~/ws/
+. devel/setup.bash
+```
 
 Para lanzar la simulación, en diferentes paneles de tmux ejecute:
 
