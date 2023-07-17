@@ -1,9 +1,0 @@
-python3-rosdep
-python3-vcstool
-ros-noetic-ros-controllers
-ros-noetic-gazebo*
-ros-noetic-moveit*
-ros-noetic-industrial-core
-ros-noetic-dynamixel-sdk
-ros-noetic-dynamixel-workbench*
-ros-noetic-robotis-manipulator

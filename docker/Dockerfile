@@ -1,3 +1,7 @@
+# Based on https://github.com/Ekumen-OS/andino/blob/dc1852b72968257b9c2552eb57fcd562e963e941/docker/Dockerfile
+# From Ekumen-OS/andino project
+# Copyright (c) 2023, Ekumen Inc., under BSD 3-Clause License
+
 # Download base image ROS Noetic Ninjemys (Ubuntu Focal)
 FROM osrf/ros:noetic-desktop-full
 
@@ -16,12 +20,11 @@ RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selectio
 # Copy installation scripts, and perform the dependency installation.
 COPY docker/install.sh .
 COPY docker/requirements.txt .
-COPY docker/requirements_ros.txt .
 RUN ./install.sh
-RUN rm install.sh requirements.txt requirements_ros.txt
+RUN rm install.sh requirements.txt
 
 # Create a user with passwordless sudo
-RUN adduser --uid $USERID --gecos "unlp student" --disabled-password $USER
+RUN adduser --uid $USERID --gecos "UNLP Student" --disabled-password $USER
 RUN adduser $USER sudo
 RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 RUN echo "export QT_X11_NO_MITSHM=1" >> /home/$USER/.bashrc
