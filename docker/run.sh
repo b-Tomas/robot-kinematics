@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# Based on https://github.com/Ekumen-OS/andino/blob/8a58d232fc60f6f241a57a012a6a2e300b8b5dcf/docker/run.sh
+# From Ekumen-OS/andino project
+# Copyright (c) 2023, Ekumen Inc., under BSD 3-Clause License
+
 set -e
 
 # Prints information about usage.
