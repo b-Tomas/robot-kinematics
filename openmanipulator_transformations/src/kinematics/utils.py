@@ -1,4 +1,5 @@
-from numpy import arccos, arctan2, cos, pi, sin
+from numpy import (arccos, arctan2, array, asarray, cos, mat, matrix, pi, sin,
+                   squeeze)
 from numpy.linalg import norm
 
 
@@ -47,13 +48,58 @@ def inverse_transform(
     return (q1, q2, q3, q4)
 
 
-def forward_transformation():
-    # TODO
-    pass
+def general_mat(t, d, r, a) -> matrix:
+    """General forward kinematics matrix
+    Obtained in section `2.2. Parámetros de Denavit–Hartenberg` of the documentation
+    """
+    return mat(
+        [
+            [cos(t), -sin(t) * cos(a), sin(t) * sin(a), r * cos(t)],
+            [sin(t), cos(t) * cos(a), -cos(t) * sin(a), r * sin(t)],
+            [0, sin(a), cos(a), d],
+            [0, 0, 0, 1],
+        ]
+    )
+
+
+def forward_transformation(
+    seg_longitudes: tuple, joint_angles: tuple, joint_offsets: tuple
+) -> tuple:
+    """Retunrns the position of the end-effector based on the description of the robot
+    The shape of the robot is the described in section `2.2. Parámetros de Denavit–Hartenberg`
+    of the documentation
+
+    Args:
+        each tuple must have length 4
+        seg_longitudes (tuple): distance between each pair of joints
+        joint_angles (tuple): robot parameters
+        joint_offsets (tuple): joint origin offsets relative to a horizontally extended robot
+
+    Returns:
+        tuple: (x, y, z) position
+    """
+    l1, l2, l3, l4 = seg_longitudes
+    q1, q2, q3, q4 = joint_angles
+    p1, p2, p3, p4 = joint_offsets
+    m = (
+        general_mat(q1 - p1, l1, 0, -pi / 2)
+        * general_mat(q2 - p2, 0, l2, 0)
+        * general_mat(q3 - p3, 0, l3, 0)
+        * general_mat(q4 - p4, 0, l4, 0)
+    )
+    x, y, z, _ = squeeze(asarray(m @ array([0, 0, 0, 1])))
+    return (x, y, z)
 
 
 def unwrap_angles(vec: list) -> list:
-    # Adjust positions within the range of -pi to pi for the robot's movement
+    """Unwrap the elements of `vec` to the range -pi to pi
+
+    Args:
+        vec (list): list of angles
+
+    Returns:
+        list: unwrapped angles
+    """
 
     for i in range(len(vec)):
         while vec[i] > pi or vec[i] < -pi:
