@@ -264,6 +264,7 @@ def main():
 
 
 if __name__ == "__main__":
+    # TODO(b-Tomas): put node name in config file
     rospy.init_node("transformations_cli")
     Thread(target=main()).start()
     rospy.spin()
