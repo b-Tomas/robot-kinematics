@@ -27,6 +27,7 @@ generate_messages(
 ## Mark executable scripts for installation
 install(PROGRAMS
   nodes/inverse_kinematics_srv.py
+  nodes/forward_kinematics_srv.py
   scripts/client.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )

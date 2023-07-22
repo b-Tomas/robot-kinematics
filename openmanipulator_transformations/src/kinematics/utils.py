@@ -1,5 +1,4 @@
-from numpy import (arccos, arctan2, array, asarray, cos, mat, matrix, pi, sin,
-                   squeeze)
+from numpy import arccos, arctan2, array, asarray, cos, mat, matrix, pi, sin, squeeze
 from numpy.linalg import norm
 
 
@@ -62,9 +61,7 @@ def general_mat(t, d, r, a) -> matrix:
     )
 
 
-def forward_transformation(
-    seg_longitudes: tuple, joint_angles: tuple, joint_offsets: tuple
-) -> tuple:
+def forward_transform(seg_longitudes: tuple, joint_angles: tuple, joint_offsets: tuple) -> tuple:
     """Retunrns the position of the end-effector based on the description of the robot
     The shape of the robot is the described in section `2.2. Parámetros de Denavit–Hartenberg`
     of the documentation
@@ -82,10 +79,10 @@ def forward_transformation(
     q1, q2, q3, q4 = joint_angles
     p1, p2, p3, p4 = joint_offsets
     m = (
-        general_mat(q1 - p1, l1, 0, -pi / 2)
-        * general_mat(q2 - p2, 0, l2, 0)
-        * general_mat(q3 - p3, 0, l3, 0)
-        * general_mat(q4 - p4, 0, l4, 0)
+        general_mat(q1 + p1, l1, 0, -pi / 2)
+        * general_mat(q2 + p2, 0, l2, 0)
+        * general_mat(q3 + p3, 0, l3, 0)
+        * general_mat(q4 + p4, 0, l4, 0)
     )
     x, y, z, _ = squeeze(asarray(m @ array([0, 0, 0, 1])))
     return (x, y, z)
