@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 
 import os
+from threading import Thread
 
 import rospy
 from kinematics.config import ROBOT_CONTROL_SERVICE_NAME, TRANSFORM_SERVICE_NAME
 from kinematics.utils import unwrap_angles
-
 from open_manipulator_msgs.msg import JointPosition
 from open_manipulator_msgs.srv import SetJointPosition, SetJointPositionRequest
+from sensor_msgs.msg import JointState
 
 from openmanipulator_transformations.srv import Transform
 
@@ -82,7 +83,7 @@ def input_position():
         return
 
 
-def transform_position(vec):
+def inverse_transform(vec):
     # Gets joint values from the transformation service
     rospy.wait_for_service(TRANSFORM_SERVICE_NAME)
 
@@ -99,6 +100,23 @@ def transform_position(vec):
 
     except rospy.ServiceException as e:
         print(f"[!] Llamada al servicio fallida: {e}")
+
+
+def forward_transform(vec):
+    # TODO(b-Tomas): call fwd transform service
+    return (0, 0, 0)
+
+
+def get_xyz():
+    # TODO(b-Tomas): Pretty print
+    try:
+        states = rospy.wait_for_message("/joint_states", JointState, timeout=5)
+        joint_angles = states.position[:4]  # Get only states of joints 1 to 4
+
+        print(f"joint angles: {joint_angles}")
+        print(f"xyz: {forward_transform(joint_angles)}")
+    except rospy.ROSException:
+        print("[E] Tiemout exceeded")
 
 
 def show_menu():
@@ -172,7 +190,7 @@ def clc():
     os.system("clear")
 
 
-if __name__ == "__main__":
+def main():
     clc()
     show_menu()
     verbose_mode = False
@@ -196,7 +214,7 @@ if __name__ == "__main__":
                 print("[*] Envio del vector de posiciones al servicio para transformar.")
 
             # Convert X Y Z t position to robot's angles
-            vec_joint = transform_position(vec_position)
+            vec_joint = inverse_transform(vec_position)
 
             if vec_joint == None:
                 print("[-] Error al transformar posicion.")
@@ -223,6 +241,7 @@ if __name__ == "__main__":
         elif command == "clc":
             # clean console
             clc()
+            show_menu()
 
         elif command == "verbose" or command == "v":
             # change verbose mode
@@ -232,9 +251,19 @@ if __name__ == "__main__":
             else:
                 print("[*] Modo descriptivo desactivado.")
 
+        # TODO(@b-Tomas): Integrate into the help menu and make naming consistent
+        elif command == "where":
+            get_xyz()
+
         elif command == "exit" or command == "q":
             # Finalize program
             break
 
         else:
             print("[!] Comando ingresado no reconocido")
+
+
+if __name__ == "__main__":
+    rospy.init_node("transformations_cli")
+    Thread(target=main()).start()
+    rospy.spin()
