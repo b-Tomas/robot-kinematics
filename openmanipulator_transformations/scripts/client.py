@@ -9,7 +9,7 @@ from kinematics.utils import unwrap_angles
 from open_manipulator_msgs.msg import JointPosition
 from open_manipulator_msgs.srv import SetJointPosition, SetJointPositionRequest
 
-from openmanipulator_transformations.srv import Transform
+from robot_kinematics.srv import Transform
 
 """
 Command-line interface for controlling the OpenManipulator-X robot arm by reading position commands 

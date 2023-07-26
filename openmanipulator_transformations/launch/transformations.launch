@@ -1,6 +1,6 @@
 <launch>
     <!-- Launch the simulation, GUI control and the transformations server -->
-    <include file="$(find openmanipulator_transformations)/launch/simulation_only.launch"/>
+    <include file="$(find robot_kinematics)/launch/simulation_only.launch"/>
     <include file="$(find open_manipulator_control_gui)/launch/open_manipulator_control_gui.launch"/>
-    <node pkg="openmanipulator_transformations" type="inverse_kinematics_srv.py" name="inverse_kinematics_srv" output="screen" />
+    <node pkg="robot_kinematics" type="inverse_kinematics_srv.py" name="inverse_kinematics_srv" output="screen" />
 </launch>

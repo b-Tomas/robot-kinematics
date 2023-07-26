@@ -2,7 +2,7 @@
 
 import sys
 import rospy
-from openmanipulator_transformations.srv import Transform
+from robot_kinematics.srv import Transform
 
 # Use as a python script
 # Call the transformations server and print the result

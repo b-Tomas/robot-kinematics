@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(openmanipulator_transformations)
+project(robot_kinematics)
 
 ## Find catkin macros and libraries, and other packages
 find_package(catkin REQUIRED COMPONENTS

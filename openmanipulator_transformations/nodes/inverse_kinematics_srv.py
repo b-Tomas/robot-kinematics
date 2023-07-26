@@ -10,7 +10,7 @@ from kinematics.config import (
 )
 from kinematics.utils import inverse_transform
 
-from openmanipulator_transformations.srv import Transform, TransformRequest, TransformResponse
+from robot_kinematics.srv import Transform, TransformRequest, TransformResponse
 
 """
 Inverse kinematics computation service. Converts cartesian coordinates to joint angles using the parameters in config.py
