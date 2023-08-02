@@ -5,7 +5,7 @@
   subtitle: "Transformaciones lineales aplicadas a robots articulados",
   authors: (
     (name: "Badenes, Tomás", mail: "tomasbadenes@alu.ing.unlp.edu.ar"),
-    (name: "Fernández, Santiago Adriel", mail: "TBD"),
+    (name: "Fernández, Santiago Adriel", mail: "fernandez.adriel@alu.ing.unlp.edu.ar"),
     (name: "Majoros, Lorenzo", mail: "lorenzomajoros@alu.ing.unlp.edu.ar"),
     (name: "Seery, Juan Martín", mail: "juan.seery@alu.ing.unlp.edu.ar"),
   )
