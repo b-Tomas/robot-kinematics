@@ -37,7 +37,7 @@ cd ~/ws/
 To make sure everything is working, run the tests:
 
 ```sh
-TODO: Tests? What tests?
+rostest openmanipulator_transformations tests.test
 ```
 
 ## Running the code
