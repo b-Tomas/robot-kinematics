@@ -67,6 +67,12 @@ cd ~/ws/
 . devel/setup.bash
 ```
 
+Compruebe los tests:
+
+```sh
+rostest openmanipulator_transformations tests.test
+```
+
 Para lanzar la simulación, en diferentes paneles de tmux ejecute:
 
 ```sh

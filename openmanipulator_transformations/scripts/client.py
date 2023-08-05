@@ -4,7 +4,7 @@ import os
 from threading import Thread
 
 import rospy
-from kinematics.config import ROBOT_CONTROL_SERVICE_NAME, TRANSFORM_SERVICE_NAME
+from kinematics.config import ROBOT_CONTROL_SERVICE_NAME, INV_TRANSFORM_SERVICE_NAME
 from kinematics.utils import unwrap_angles
 from open_manipulator_msgs.msg import JointPosition
 from open_manipulator_msgs.srv import SetJointPosition, SetJointPositionRequest
@@ -85,14 +85,14 @@ def input_position():
 
 def inverse_transform(vec):
     # Gets joint values from the transformation service
-    rospy.wait_for_service(TRANSFORM_SERVICE_NAME)
+    rospy.wait_for_service(INV_TRANSFORM_SERVICE_NAME)
 
     try:
-        transformation_service = rospy.ServiceProxy(TRANSFORM_SERVICE_NAME, Transform)
+        transformation_service = rospy.ServiceProxy(INV_TRANSFORM_SERVICE_NAME, Transform)
 
         res = transformation_service(vec)  # Transform x, y, z position to joint angles
 
-        vec_joint = res.joint_angles
+        vec_joint = res.output
 
         unwrap_angles(list(vec_joint))
 
