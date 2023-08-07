@@ -4,7 +4,7 @@ import os
 from threading import Thread
 
 import rospy
-from kinematics.config import ROBOT_CONTROL_SERVICE_NAME, INV_TRANSFORM_SERVICE_NAME, FWD_TRANSFORM_SERVICE_NAME
+from kinematics.config import ROBOT_CONTROL_SERVICE_NAME, INV_TRANSFORM_SERVICE_NAME, FWD_TRANSFORM_SERVICE_NAME, CLI_NODE_NAME
 from kinematics.utils import unwrap_angles
 from open_manipulator_msgs.msg import JointPosition
 from open_manipulator_msgs.srv import SetJointPosition, SetJointPositionRequest
@@ -165,7 +165,7 @@ def show_help():
     print(
         """
     
-    Comando             Descripción
+    Comando                 Descripción
 
     help         ?          Muestra este menú
     setPos       position   Envio de posición al robot
@@ -196,7 +196,6 @@ def show_help():
 
 def clc():
     os.system("clear")
-
 
 def main():
     clc()
@@ -273,7 +272,6 @@ def main():
 
 
 if __name__ == "__main__":
-    # TODO(b-Tomas): put node name in config file
-    rospy.init_node("transformations_cli")
+    rospy.init_node(CLI_NODE_NAME)
     Thread(target=main()).start()
     rospy.spin()

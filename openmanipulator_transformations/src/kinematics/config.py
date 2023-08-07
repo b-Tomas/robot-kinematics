@@ -5,6 +5,7 @@ INV_TRANSFORM_SERVICE_NAME = "/kinematics/inverse_transformation"
 INV_TRANSFORM_NODE_NAME = "inv_transform_srv"
 FWD_TRANSFORM_SERVICE_NAME = "/kinematics/forward_transformation"
 FWD_TRANSFORM_NODE_NAME = "fwd_transform_srv"
+CLI_NODE_NAME = "transformations_cli"
 
 # OpenManipulator control service
 ROBOT_CONTROL_SERVICE_NAME = "/goal_joint_space_path"
