@@ -12,7 +12,6 @@ from sensor_msgs.msg import JointState
 
 from openmanipulator_transformations.srv import Transform, TransformRequest, TransformResponse
 
-
 """
 Command-line interface for controlling the OpenManipulator-X robot arm by reading position commands 
 in cartesian coordinates from user input, transforming them to robot parameters using the 
@@ -169,8 +168,8 @@ def show_help():
 
     help         ?          Muestra este menú
     setPos       position   Envio de posición al robot
-    getPos       g          Solicitud de la posicion actual del robot en los ejes coordenados
-    home                    Envio de posición original
+    getPos       g          Solicitud de la posición actual del robot en los ejes coordenados
+    home                    Envío de posición original
     verbose      v          Activar o desactivar modo descriptivo 
     exit         q          Finalizar programa
     clc                     Limpiar consola
@@ -182,10 +181,10 @@ def show_help():
         Pos. Z: 1.0
         Ángulo de agarre (rad): 1.57
 
-    Posicion X, Y y Z es la coordenada en el espacio
-    Ángulo de agarre es la direccion de la pinza 
+    Posición X, Y y Z es la coordenada en el espacio
+    Ángulo de agarre es la dirección de la pinza 
 
-    Descripción de algunos ángulos de agarre desde la posicion origen:
+    Descripción de algunos ángulos de agarre desde la posición origen:
         Apuntando hacia el cielo:  1.57 ( pi/2)
         Apuntando hacia el suelo: -1.57 (-pi/2)
         Apuntando hacia el exterior:  0
@@ -212,33 +211,33 @@ def main():
             vec_position = input_position()
 
             if vec_position == None:
-                print("[-] Error al ingresar posicion.")
+                print("[-] Error al ingresar posición.")
                 continue
 
             # Show information in description mode
             if verbose_mode:
-                print(f"[*] Vector de posicion ingresado: {vec_position}")
-                print("[*] Envio del vector de posiciones al servicio para transformar.")
+                print(f"[*] Vector de posición ingresado: {vec_position}")
+                print("[*] Envío del vector de posiciones al servicio para transformar.")
 
             # Convert X Y Z t position to robot's angles
             vec_joint = inverse_transform(vec_position)
 
             if vec_joint == None:
-                print("[-] Error al transformar posicion.")
+                print("[-] Error al transformar posición.")
                 continue
 
             # Show information in description mode
             if verbose_mode:
-                print("[*] Vector de angulos del motor recibido.")
-                print(f"[*] Vector de posicion transformado: {vec_position}")
-                print("[*] Envio de angulos al robot.")
+                print("[*] Vector de ángulos del motor recibido.")
+                print(f"[*] Vector de posición transformado: {vec_position}")
+                print("[*] Envío de ángulos al robot.")
 
             control_robot(vec_joint)
 
         elif command == "home":
             # Send init pose
             if verbose_mode:
-                print("[*] Envio posicion origen.")
+                print("[*] Envío posición origen.")
             control_robot([0, 0, 0, 0])
 
         elif command == "help" or command == "?":
