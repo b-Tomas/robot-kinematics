@@ -4,13 +4,14 @@ import os
 from threading import Thread
 
 import rospy
-from kinematics.config import ROBOT_CONTROL_SERVICE_NAME, INV_TRANSFORM_SERVICE_NAME
+from kinematics.config import ROBOT_CONTROL_SERVICE_NAME, INV_TRANSFORM_SERVICE_NAME, FWD_TRANSFORM_SERVICE_NAME
 from kinematics.utils import unwrap_angles
 from open_manipulator_msgs.msg import JointPosition
 from open_manipulator_msgs.srv import SetJointPosition, SetJointPositionRequest
 from sensor_msgs.msg import JointState
 
-from openmanipulator_transformations.srv import Transform
+from openmanipulator_transformations.srv import Transform, TransformRequest, TransformResponse
+
 
 """
 Command-line interface for controlling the OpenManipulator-X robot arm by reading position commands 
@@ -101,20 +102,26 @@ def inverse_transform(vec):
     except rospy.ServiceException as e:
         print(f"[!] Llamada al servicio fallida: {e}")
 
-
 def forward_transform(vec):
-    # TODO(b-Tomas): call fwd transform service
-    return (0, 0, 0)
+    #Gets position from forward service
+    rospy.wait_for_service(FWD_TRANSFORM_SERVICE_NAME)
+    try:
+        transformation_service = rospy.ServiceProxy(FWD_TRANSFORM_SERVICE_NAME, Transform)
 
+        result = transformation_service(vec).output
 
+        return result
+    except: 
+        print(f"[!] Llamada al servicio fallida")
+    
 def get_xyz():
-    # TODO(b-Tomas): Pretty print
     try:
         states = rospy.wait_for_message("/joint_states", JointState, timeout=5)
-        joint_angles = states.position[:4]  # Get only states of joints 1 to 4
+        joint_angles = states.position[2:6]  # Get only states of joints 1 to 4
 
-        print(f"joint angles: {joint_angles}")
-        print(f"xyz: {forward_transform(joint_angles)}")
+        print(f'Ángulos de las articulaciones (1-4): {", " .join([f"{x:.3f}" for x in joint_angles])}')
+        result = forward_transform(joint_angles)
+        print(f"Posición en los ejes coordenados (X, Y, Z): " + ", " .join([f"{x:.3f}" for x in result]))
     except rospy.ROSException:
         print("[E] Tiemout exceeded")
 
@@ -160,12 +167,13 @@ def show_help():
     
     Comando             Descripción
 
-    help     ?          Muestra este menú
-    position pos        Envio de posición al robot
-    home                Envio de posición original
-    verbose  v          Activar o desactivar modo descriptivo 
-    exit     q          Finalizar programa
-    clc                 Limpiar consola
+    help         ?          Muestra este menú
+    setPos       position   Envio de posición al robot
+    getPos       g          Solicitud de la posicion actual del robot en los ejes coordenados
+    home                    Envio de posición original
+    verbose      v          Activar o desactivar modo descriptivo 
+    exit         q          Finalizar programa
+    clc                     Limpiar consola
 
     Ejemplo de uso:
     > pos
@@ -200,7 +208,7 @@ def main():
         command = input("\n> ").strip()
 
         # Filter commands
-        if command == "pos" or command == "position":
+        if command == "setPos" or command == "position":
             # Enter position to send to the robot
             vec_position = input_position()
 
@@ -251,8 +259,9 @@ def main():
             else:
                 print("[*] Modo descriptivo desactivado.")
 
-        # TODO(@b-Tomas): Integrate into the help menu and make naming consistent
-        elif command == "where":
+        elif command == "getPos" or command == "g":
+            if verbose_mode:
+                print("Obteniendo posición en X Y Z")
             get_xyz()
 
         elif command == "exit" or command == "q":
