@@ -1,4 +1,4 @@
-# Applied Inverse and Forward Kinematics
+# Applied inverse and forward kinematics
 
 <p align="center">
   <img src="docs/demo.gif" />
@@ -8,21 +8,22 @@
 
 Robotic kinematics is the field of research that studies the movement of articulated chains
 with multiple degrees of freedom. This project is the result of a proposal by mathematics
-educators that we decided to bring into the field of robotics to demonstrate one of the many
+educators that we decided to merge with the field of robotics to demonstrate one of the many
 applications of linear algebra. We formulated a problem where the goal is to achieve the motion
 of the joints of a robotic arm using linear transformations.
 
-This project can be used educationally to demonstrate mathematical concepts related to homogeneous
-coordinates and [Denavit–Hartenberg parameters](https://en.wikipedia.org/wiki/Denavit%E2%80%93Hartenberg_parameters),
-as well as to provide an initial introduction to robotics using a simulation of the open-source robot,
+This project can be used to demonstrate mathematical concepts related to homogeneous
+coordinates and [Denavit–Hartenberg parameters](**https://en.wikipedia.org/wiki/Denavit%E2%80%93Hartenberg_parameters**),
+as well as to provide an initial introduction to robotics using a simulation of the open-source robot
 [OpenManipulator-X](https://emanual.robotis.com/docs/en/platform/openmanipulator_x/overview/).
 
 <p align="center">
   <img src="docs/diagram_annotated.png" width="500" />
 </p>
 
-The programming work done involved adding two components to the simulated environment of
-[OpenManipulator-X](https://emanual.robotis.com/docs/en/platform/openmanipulator_x/overview/):
+The programming work done involved adding to the simulated environment of
+[OpenManipulator-X](https://emanual.robotis.com/docs/en/platform/openmanipulator_x/overview/)
+two components implementing the developed mathematical solution:
 
 - **`/transformations/transform`** ROS Service: Takes a parameter of a coordinate in space (x, y, z)
 - and a gripping angle. By using the developed inverse kinematics formulas, it calculates the robot's 
@@ -31,11 +32,11 @@ The programming work done involved adding two components to the simulated enviro
 - **`Client CLI`**: This is the interface that the user will use to interact with the above service and 
 - then send the results to the robot's controller.
 
-These components are part of the ROS package `openmanipulator_transformations` provided in this repository.
+These components are part of the ROS package `robot_kinematics` provided in this repository.
 
-The mathematical development of the process can be found in the document [`docs/Robot_Kinematics.pdf`](https://github.com/b-Tomas/robot-kinematics/blob/main/docs/Robot_Kinematics.pdf).
+The mathematical development of the process can be found in the document [`docs/Robot_Kinematics.pdf`](https://github.com/b-Tomas/robot-kinematics/blob/main/docs/theory/robot-kinematics.pdf).
 
-## Environment Setup and Usage
+## Environment setup and usage
 
 It is recommended to use the provided Docker configuration. For instructions on how to build and run the 
 Docker environment, valid for both Linux-based and Windows systems, refer to the instructions in [`/docker/README.md`](https://github.com/b-Tomas/robot-kinematics/blob/main/docker/README.md).
@@ -60,7 +61,7 @@ cd ~/ws/
 catkin_make
 ```
 
-Activate the overlay (remember to execute this step for each new bash session that interacts with these packages):
+Source the overlay (remember to execute this step for each new bash session that interacts with these packages):
 
 ```sh
 cd ~/ws/
@@ -70,20 +71,20 @@ cd ~/ws/
 Run the tests:
 
 ```sh
-rostest openmanipulator_transformations tests.test
+rostest robot_kinematics tests.test
 ```
 
 To launch the simulation, in different tmux panels, execute:
 
 ```sh
 # Launch simulation, GUI, and transformations server
-roslaunch openmanipulator_transformations transformations.launch
+roslaunch robot_kinematics transformations.launch
 # Launch the CLI
-roslaunch openmanipulator_transformations cli.launch
+roslaunch robot_kinematics cli.launch
 ```
 
-This will launch the simulation in Gazebo, the visualization in RViz, the robot's controller, a graphical tool to 
-view and send robot parameters, the transformations service, and the CLI for this package. In the CLI, you can execute 
+This will launch the Gazebo simulation, the RViz visualization, the robot's controller, a GUI to view and 
+send robot parameters, the transformations service, and the CLI for this package. In the CLI, you can execute 
 the command `?` to get information on its usage.
 
 <p align="center">
@@ -93,7 +94,7 @@ the command `?` to get information on its usage.
 Before sending a position, click the `Timer Start` button in the `OpenManipulator control GUI` window.
 
 Then, send the target position (0.1, 0.1, 0.2, 0.0) (distance units are in meters, and angles are in radians)
- and observe in the control window that the final position of the end-effector matches the sent position.
+and observe in the control window that the final position of the end-effector matches the sent position.
 
 ## Authors
 
