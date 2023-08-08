@@ -216,10 +216,10 @@ def main():
 
     while True:
         # Enter command
-        command = input("\n> ").strip()
+        command = input("\n> ").strip().lower()
 
         # Filter commands
-        if command == "setPos" or command == "position":
+        if command == "setpos" or command == "position":
             # Enter position to send to the robot
             vec_position = input_position()
 
@@ -270,7 +270,7 @@ def main():
             else:
                 print("[*] Modo descriptivo desactivado.")
 
-        elif command == "getPos" or command == "g":
+        elif command == "getpos" or command == "g":
             if verbose_mode:
                 print("Obteniendo posición en X Y Z")
             get_xyz()
