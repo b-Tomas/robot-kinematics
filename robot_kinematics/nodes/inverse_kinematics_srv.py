@@ -2,11 +2,11 @@
 
 import rospy
 from kinematics.config import (
+    INV_TRANSFORM_NODE_NAME,
+    INV_TRANSFORM_SERVICE_NAME,
     JOINT_OFFSETS,
     LINK_LONGITUDES,
     OFFSET_XYZ,
-    TRANSFORM_NODE_NAME,
-    TRANSFORM_SERVICE_NAME,
 )
 from kinematics.utils import inverse_transform
 
@@ -67,10 +67,10 @@ def transform(
 
 def process_service_request(req: TransformRequest) -> TransformResponse:
     rospy.loginfo(f"Received request: {req}")
-    assert len(req.coordinates) == 4, "Array length must be four"
+    assert len(req.input) == 4, "Array length must be four"
     response = TransformResponse()
-    response.joint_angles = transform(
-        ee_pose=req.coordinates,
+    response.output = transform(
+        ee_pose=req.input,
         seg_longitudes=LINK_LONGITUDES,
         offset_joints=JOINT_OFFSETS,
         offset_xyz=OFFSET_XYZ,
@@ -81,13 +81,13 @@ def process_service_request(req: TransformRequest) -> TransformResponse:
 
 def serve():
     # ROS node for the service server.
-    rospy.init_node(TRANSFORM_NODE_NAME, anonymous=False)
+    rospy.init_node(INV_TRANSFORM_NODE_NAME, anonymous=False)
 
     # Create a ROS service type.
-    rospy.Service(TRANSFORM_SERVICE_NAME, Transform, process_service_request)
+    rospy.Service(INV_TRANSFORM_SERVICE_NAME, Transform, process_service_request)
 
     # Log message about service availability.
-    rospy.loginfo(f"{TRANSFORM_SERVICE_NAME} service is now available.")
+    rospy.loginfo(f"{INV_TRANSFORM_SERVICE_NAME} service is now available.")
     rospy.spin()
 
 

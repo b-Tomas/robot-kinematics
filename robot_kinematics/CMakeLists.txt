@@ -27,6 +27,7 @@ generate_messages(
 ## Mark executable scripts for installation
 install(PROGRAMS
   nodes/inverse_kinematics_srv.py
+  nodes/forward_kinematics_srv.py
   scripts/client.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
@@ -35,3 +36,9 @@ install(PROGRAMS
 install(DIRECTORY launch
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
+
+## Add unit tests files
+if(CATKIN_ENABLE_TESTING)
+  find_package(rostest REQUIRED)
+  add_rostest(tests/tests.test)
+endif()
