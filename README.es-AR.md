@@ -35,7 +35,7 @@ añadir dos componentes que implementan la solución matemática desarrollada:
 
 Estos componentes son parte del paquete de ROS `openmanipulator_transformations` provisto en este repositorio.
 
-El desarrollo matemático del proceso se encuentra en el documento [`docs/Cinemática_de_robots.pdf`](https://github.com/b-Tomas/robot-kinematics/blob/main/docs/Cinemática_de_robots.pdf).
+El desarrollo matemático del proceso se encuentra en el documento [`docs/theory/robot-kinematics.pdf`](https://github.com/b-Tomas/robot-kinematics/blob/main/docs/theory/robot-kinematics.pdf).
 
 ## Configuración del entorno y utilización
 
@@ -107,3 +107,5 @@ de las facultades de Ingeniería e Informática de la [Universidad Nacional de L
 - Juan Martín Seery
 - Santiago Adriel Fernández
 - Lorenzo Majoros
+
+Se recomienda revisar la carpeta [`docs/theory/`](https://github.com/b-Tomas/robot-kinematics/tree/main/docs/theory) con el desarrollo matemático del proyecto.
