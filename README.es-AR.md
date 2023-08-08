@@ -1,5 +1,7 @@
 # Cinemática inversa y directa aplicada
 
+Click [here](https://github.com/b-Tomas/robot-kinematics/blob/main/README.md) to read the document in English.
+
 <p align="center">
   <img src="docs/demo.gif" />
 </p>
@@ -28,7 +30,7 @@ añadir dos componentes que implementan la solución matemática desarrollada:
 - **`/transformations/transform`** ROS Service: Toma como parámetro una coordenada del
   espacio (x, y, z) y un ángulo de agarre, y utilizando las fórmulas de cinemática inversa
   desarrolladas calcula los parámetros del robot, o ánglos de las articulaciones, para que
-  la posición de el _end-effector_ coincida con los parámetros dados.
+  la posición del _end-effector_ coincida con los parámetros dados.
 
 - **`Client CLI`**: Es la interfaz que utilizará el usuario para interactuar con el servicio
   anterior y luego enviar los resultados al controlador del robot.
