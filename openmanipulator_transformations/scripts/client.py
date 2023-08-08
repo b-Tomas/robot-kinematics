@@ -4,7 +4,12 @@ import os
 from threading import Thread
 
 import rospy
-from kinematics.config import ROBOT_CONTROL_SERVICE_NAME, INV_TRANSFORM_SERVICE_NAME, FWD_TRANSFORM_SERVICE_NAME, CLI_NODE_NAME
+from kinematics.config import (
+    ROBOT_CONTROL_SERVICE_NAME,
+    INV_TRANSFORM_SERVICE_NAME,
+    FWD_TRANSFORM_SERVICE_NAME,
+    CLI_NODE_NAME,
+)
 from kinematics.utils import unwrap_angles
 from open_manipulator_msgs.msg import JointPosition
 from open_manipulator_msgs.srv import SetJointPosition, SetJointPositionRequest
@@ -101,8 +106,9 @@ def inverse_transform(vec):
     except rospy.ServiceException as e:
         print(f"[!] Llamada al servicio fallida: {e}")
 
+
 def forward_transform(vec):
-    #Gets position from forward service
+    # Gets position from forward service
     rospy.wait_for_service(FWD_TRANSFORM_SERVICE_NAME)
     try:
         transformation_service = rospy.ServiceProxy(FWD_TRANSFORM_SERVICE_NAME, Transform)
@@ -110,17 +116,23 @@ def forward_transform(vec):
         result = transformation_service(vec).output
 
         return result
-    except: 
+    except:
         print(f"[!] Llamada al servicio fallida")
-    
+
+
 def get_xyz():
     try:
         states = rospy.wait_for_message("/joint_states", JointState, timeout=5)
         joint_angles = states.position[2:6]  # Get only states of joints 1 to 4
 
-        print(f'Ángulos de las articulaciones (1-4): {", " .join([f"{x:.3f}" for x in joint_angles])}')
+        print(
+            f'Ángulos de las articulaciones (1-4): {", " .join([f"{x:.3f}" for x in joint_angles])}'
+        )
         result = forward_transform(joint_angles)
-        print(f"Posición en los ejes coordenados (X, Y, Z): " + ", " .join([f"{x:.3f}" for x in result]))
+        print(
+            f"Posición en los ejes coordenados (X, Y, Z): "
+            + ", ".join([f"{x:.3f}" for x in result])
+        )
     except rospy.ROSException:
         print("[E] Tiemout exceeded")
 
@@ -195,6 +207,7 @@ def show_help():
 
 def clc():
     os.system("clear")
+
 
 def main():
     clc()
