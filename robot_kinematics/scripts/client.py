@@ -15,7 +15,7 @@ from open_manipulator_msgs.msg import JointPosition
 from open_manipulator_msgs.srv import SetJointPosition, SetJointPositionRequest
 from sensor_msgs.msg import JointState
 
-from openmanipulator_transformations.srv import Transform, TransformRequest, TransformResponse
+from robot_kinematics.srv import Transform
 
 """
 Command-line interface for controlling the OpenManipulator-X robot arm by reading position commands 

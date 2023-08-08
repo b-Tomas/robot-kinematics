@@ -11,7 +11,7 @@ from kinematics.config import (
 from kinematics.utils import forward_transform
 from numpy import array
 
-from openmanipulator_transformations.srv import Transform, TransformRequest, TransformResponse
+from robot_kinematics.srv import Transform, TransformRequest, TransformResponse
 
 """
 Forward kinematics computation service. Converts joint angles to cartesian coordinates using the parameters in config.py

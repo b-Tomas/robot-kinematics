@@ -33,7 +33,7 @@ añadir dos componentes que implementan la solución matemática desarrollada:
 - **`Client CLI`**: Es la interfaz que utilizará el usuario para interactuar con el servicio
   anterior y luego enviar los resultados al controlador del robot.
 
-Estos componentes son parte del paquete de ROS `openmanipulator_transformations` provisto en este repositorio.
+Estos componentes son parte del paquete de ROS `robot_kinematics` provisto en este repositorio.
 
 El desarrollo matemático del proceso se encuentra en el documento [`docs/theory/robot-kinematics.pdf`](https://github.com/b-Tomas/robot-kinematics/blob/main/docs/theory/robot-kinematics.pdf).
 
@@ -70,16 +70,16 @@ cd ~/ws/
 Compruebe los tests:
 
 ```sh
-rostest openmanipulator_transformations tests.test
+rostest robot_kinematics tests.test
 ```
 
 Para lanzar la simulación, en diferentes paneles de tmux ejecute:
 
 ```sh
 # Launch simulation, GUI and transformations server
-roslaunch openmanipulator_transformations transformations.launch
+roslaunch robot_kinematics transformations.launch
 # Launch the CLI
-roslaunch openmanipulator_transformations cli.launch
+roslaunch robot_kinematics cli.launch
 ```
 
 Esto lanzará la simulación en Gazebo, la visualización en RViz, el controlador del robot y una

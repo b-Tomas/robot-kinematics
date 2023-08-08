@@ -1,0 +1,4 @@
+<launch>
+    <!-- Launch the control CLI -->
+    <node pkg="robot_kinematics" type="client.py" name="transformation_cli" output="screen" />
+</launch>

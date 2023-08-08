@@ -68,4 +68,4 @@ class Tests(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    rostest.run("openmanipulator_transformations", "kinematics math tests", Tests)
+    rostest.run("robot_kinematics", "kinematics math tests", Tests)

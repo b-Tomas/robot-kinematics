@@ -37,7 +37,7 @@ cd ~/ws/
 To make sure everything is working, run the tests:
 
 ```sh
-rostest openmanipulator_transformations tests.test
+rostest robot_kinematics tests.test
 ```
 
 ## Running the code
@@ -45,9 +45,9 @@ rostest openmanipulator_transformations tests.test
 You can use the provided launchfiles to run the simulation and the transformations server, and in a different tmux pane the CLI client:
 ```sh
 # Launch simulation, GUI and transformations server
-roslaunch openmanipulator_transformations transformations.launch
+roslaunch robot_kinematics transformations.launch
 # Launch the CLI
-roslaunch openmanipulator_transformations cli.launch
+roslaunch robot_kinematics cli.launch
 ```
 
 For OpenManipulator-only launches, you can use the original launchfiles:
@@ -68,7 +68,7 @@ And then run our nodes with:
 
 ```sh
 # Math service
-rosrun openmanipulator_transformations inverse_kinematics_srv.py
+rosrun robot_kinematics inverse_kinematics_srv.py
 # CLI client
-rosrun openmanipulator_transformations client.py
+rosrun robot_kinematics client.py
 ```

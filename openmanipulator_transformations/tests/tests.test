@@ -1,4 +1,0 @@
-<launch>
-    <!-- Run unit tests -->
-    <test test-name="unit tests" pkg="openmanipulator_transformations" type="test_transformations.py" />
-</launch>

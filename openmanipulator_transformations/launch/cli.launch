@@ -1,4 +1,0 @@
-<launch>
-    <!-- Launch the control CLI -->
-    <node pkg="openmanipulator_transformations" type="client.py" name="transformation_cli" output="screen" />
-</launch>
