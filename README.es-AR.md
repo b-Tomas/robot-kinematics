@@ -1,5 +1,7 @@
 # Cinemática inversa y directa aplicada
 
+Click [here](https://github.com/b-Tomas/robot-kinematics/blob/main/README.md) to read the document in English.
+
 <p align="center">
   <img src="docs/demo.gif" />
 </p>

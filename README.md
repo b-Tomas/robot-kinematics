@@ -1,5 +1,7 @@
 # Applied inverse and forward kinematics
 
+Haga click [acá](https://github.com/b-Tomas/robot-kinematics/blob/main/README.es-AR.md) para leer el documento en Español.
+
 <p align="center">
   <img src="docs/demo.gif" />
 </p>
