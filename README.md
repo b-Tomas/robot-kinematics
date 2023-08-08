@@ -26,11 +26,11 @@ The programming work done involved adding to the simulated environment of
 two components implementing the developed mathematical solution:
 
 - **`/transformations/transform`** ROS Service: Takes a parameter of a coordinate in space (x, y, z)
-- and a gripping angle. By using the developed inverse kinematics formulas, it calculates the robot's 
-- parameters or joint angles, so that the position of the end-effector matches the given parameters.
+and a gripping angle. By using the developed inverse kinematics formulas, it calculates the robot's 
+parameters or joint angles, so that the position of the end-effector matches the given parameters.
 
-- **`Client CLI`**: This is the interface that the user will use to interact with the above service and 
-- then send the results to the robot's controller.
+- **`Client CLI`**: This is the interface that the user will use to interact with the above service 
+and then send the results to the robot's controller.
 
 These components are part of the ROS package `robot_kinematics` provided in this repository.
 
