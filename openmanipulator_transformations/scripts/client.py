@@ -75,7 +75,7 @@ def control_robot(
 
 
 def input_position():
-    # get position in space
+    # Read position from user input
     vec = []
     try:
         vec.append(float(input("Pos. X: ")))
@@ -91,7 +91,6 @@ def input_position():
 def inverse_transform(vec):
     # Gets joint values from the transformation service
     rospy.wait_for_service(INV_TRANSFORM_SERVICE_NAME)
-
     try:
         transformation_service = rospy.ServiceProxy(INV_TRANSFORM_SERVICE_NAME, Transform)
 
@@ -108,14 +107,14 @@ def inverse_transform(vec):
 
 
 def forward_transform(vec):
-    # Gets position from forward service
+    # Gets the robot's position based on its joint angles
     rospy.wait_for_service(FWD_TRANSFORM_SERVICE_NAME)
     try:
         transformation_service = rospy.ServiceProxy(FWD_TRANSFORM_SERVICE_NAME, Transform)
 
-        result = transformation_service(vec).output
+        pos = transformation_service(vec).output
 
-        return result
+        return pos
     except:
         print(f"[!] Llamada al servicio fallida")
 
@@ -187,19 +186,20 @@ def show_help():
     clc                     Limpiar consola
 
     Ejemplo de uso:
-    > pos
+    > setPos
         Pos. X: 1.0
         Pos. Y: 1.0
         Pos. Z: 1.0
         Ángulo de agarre (rad): 1.57
 
-    Posición X, Y y Z es la coordenada en el espacio
-    Ángulo de agarre es la dirección de la pinza 
+    Donde: 
+      - Posición X, Y y Z es la coordenada en el espacio
+      - Ángulo de agarre es la dirección de la pinza 
 
     Descripción de algunos ángulos de agarre desde la posición origen:
-        Apuntando hacia el cielo:  1.57 ( pi/2)
-        Apuntando hacia el suelo: -1.57 (-pi/2)
-        Apuntando hacia el exterior:  0
+        Apuntando hacia el arriba: 1.57 ( pi/2)
+        Apuntando hacia el abajo: -1.57 (-pi/2)
+        Apuntando hacia el un lado:  0
         
     """
     )
