@@ -24,7 +24,7 @@ if __name__ == "__main__":
     if len(sys.argv) == 5:
         coords = tuple(map(lambda x: float(x), sys.argv[1:]))
     else:
-        print(f"Usage: {sys.argv[0]} x y z t")
+        print(f"Usage: {sys.argv[0]} a b c d")
         sys.exit(1)
-    print(f"Requesting: {coords}")
+    print(f"Requesting {coords} to {TRANSFORM_SERVICE_NAME}")
     print(f"Response: {transform_client(coords)}")
