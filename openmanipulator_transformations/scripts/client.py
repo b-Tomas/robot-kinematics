@@ -1,15 +1,21 @@
 #!/usr/bin/env python3
 
 import os
+from threading import Thread
 
 import rospy
-from kinematics.config import ROBOT_CONTROL_SERVICE_NAME, INV_TRANSFORM_SERVICE_NAME
+from kinematics.config import (
+    ROBOT_CONTROL_SERVICE_NAME,
+    INV_TRANSFORM_SERVICE_NAME,
+    FWD_TRANSFORM_SERVICE_NAME,
+    CLI_NODE_NAME,
+)
 from kinematics.utils import unwrap_angles
-
 from open_manipulator_msgs.msg import JointPosition
 from open_manipulator_msgs.srv import SetJointPosition, SetJointPositionRequest
+from sensor_msgs.msg import JointState
 
-from openmanipulator_transformations.srv import Transform
+from openmanipulator_transformations.srv import Transform, TransformRequest, TransformResponse
 
 """
 Command-line interface for controlling the OpenManipulator-X robot arm by reading position commands 
@@ -82,7 +88,7 @@ def input_position():
         return
 
 
-def transform_position(vec):
+def inverse_transform(vec):
     # Gets joint values from the transformation service
     rospy.wait_for_service(INV_TRANSFORM_SERVICE_NAME)
 
@@ -99,6 +105,36 @@ def transform_position(vec):
 
     except rospy.ServiceException as e:
         print(f"[!] Llamada al servicio fallida: {e}")
+
+
+def forward_transform(vec):
+    # Gets position from forward service
+    rospy.wait_for_service(FWD_TRANSFORM_SERVICE_NAME)
+    try:
+        transformation_service = rospy.ServiceProxy(FWD_TRANSFORM_SERVICE_NAME, Transform)
+
+        result = transformation_service(vec).output
+
+        return result
+    except:
+        print(f"[!] Llamada al servicio fallida")
+
+
+def get_xyz():
+    try:
+        states = rospy.wait_for_message("/joint_states", JointState, timeout=5)
+        joint_angles = states.position[2:6]  # Get only states of joints 1 to 4
+
+        print(
+            f'Ángulos de las articulaciones (1-4): {", " .join([f"{x:.3f}" for x in joint_angles])}'
+        )
+        result = forward_transform(joint_angles)
+        print(
+            f"Posición en los ejes coordenados (X, Y, Z): "
+            + ", ".join([f"{x:.3f}" for x in result])
+        )
+    except rospy.ROSException:
+        print("[E] Tiemout exceeded")
 
 
 def show_menu():
@@ -140,14 +176,15 @@ def show_help():
     print(
         """
     
-    Comando             Descripción
+    Comando                 Descripción
 
-    help     ?          Muestra este menú
-    position pos        Envio de posición al robot
-    home                Envio de posición original
-    verbose  v          Activar o desactivar modo descriptivo 
-    exit     q          Finalizar programa
-    clc                 Limpiar consola
+    help         ?          Muestra este menú
+    setPos       position   Envio de posición al robot
+    getPos       g          Solicitud de la posición actual del robot en los ejes coordenados
+    home                    Envío de posición original
+    verbose      v          Activar o desactivar modo descriptivo 
+    exit         q          Finalizar programa
+    clc                     Limpiar consola
 
     Ejemplo de uso:
     > pos
@@ -156,10 +193,10 @@ def show_help():
         Pos. Z: 1.0
         Ángulo de agarre (rad): 1.57
 
-    Posicion X, Y y Z es la coordenada en el espacio
-    Ángulo de agarre es la direccion de la pinza 
+    Posición X, Y y Z es la coordenada en el espacio
+    Ángulo de agarre es la dirección de la pinza 
 
-    Descripción de algunos ángulos de agarre desde la posicion origen:
+    Descripción de algunos ángulos de agarre desde la posición origen:
         Apuntando hacia el cielo:  1.57 ( pi/2)
         Apuntando hacia el suelo: -1.57 (-pi/2)
         Apuntando hacia el exterior:  0
@@ -172,48 +209,48 @@ def clc():
     os.system("clear")
 
 
-if __name__ == "__main__":
+def main():
     clc()
     show_menu()
     verbose_mode = False
 
     while True:
         # Enter command
-        command = input("\n> ").strip()
+        command = input("\n> ").strip().lower()
 
         # Filter commands
-        if command == "pos" or command == "position":
+        if command == "setpos" or command == "position":
             # Enter position to send to the robot
             vec_position = input_position()
 
             if vec_position == None:
-                print("[-] Error al ingresar posicion.")
+                print("[-] Error al ingresar posición.")
                 continue
 
             # Show information in description mode
             if verbose_mode:
-                print(f"[*] Vector de posicion ingresado: {vec_position}")
-                print("[*] Envio del vector de posiciones al servicio para transformar.")
+                print(f"[*] Vector de posición ingresado: {vec_position}")
+                print("[*] Envío del vector de posiciones al servicio para transformar.")
 
             # Convert X Y Z t position to robot's angles
-            vec_joint = transform_position(vec_position)
+            vec_joint = inverse_transform(vec_position)
 
             if vec_joint == None:
-                print("[-] Error al transformar posicion.")
+                print("[-] Error al transformar posición.")
                 continue
 
             # Show information in description mode
             if verbose_mode:
-                print("[*] Vector de angulos del motor recibido.")
-                print(f"[*] Vector de posicion transformado: {vec_position}")
-                print("[*] Envio de angulos al robot.")
+                print("[*] Vector de ángulos del motor recibido.")
+                print(f"[*] Vector de posición transformado: {vec_position}")
+                print("[*] Envío de ángulos al robot.")
 
             control_robot(vec_joint)
 
         elif command == "home":
             # Send init pose
             if verbose_mode:
-                print("[*] Envio posicion origen.")
+                print("[*] Envío posición origen.")
             control_robot([0, 0, 0, 0])
 
         elif command == "help" or command == "?":
@@ -223,6 +260,7 @@ if __name__ == "__main__":
         elif command == "clc":
             # clean console
             clc()
+            show_menu()
 
         elif command == "verbose" or command == "v":
             # change verbose mode
@@ -232,9 +270,20 @@ if __name__ == "__main__":
             else:
                 print("[*] Modo descriptivo desactivado.")
 
+        elif command == "getpos" or command == "g":
+            if verbose_mode:
+                print("Obteniendo posición en X Y Z")
+            get_xyz()
+
         elif command == "exit" or command == "q":
             # Finalize program
             break
 
         else:
             print("[!] Comando ingresado no reconocido")
+
+
+if __name__ == "__main__":
+    rospy.init_node(CLI_NODE_NAME)
+    Thread(target=main()).start()
+    rospy.spin()
