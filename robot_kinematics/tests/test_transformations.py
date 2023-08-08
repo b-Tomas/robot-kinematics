@@ -57,6 +57,15 @@ class Tests(unittest.TestCase):
         expected = (0.274, 0, 0.188)
         assert result == expected
 
+    def test_inverse_transformation(self):
+        # Simple robot
+        seg_longitudes = (0, 1, 1, 0.5)
+        ee_pose = (2.5, 0, 0, 0)
+        result = round_collection(utils.inverse_transform(ee_pose, seg_longitudes))
+        print(result)
+        expected = (0, 0, 0, 0)
+        assert result == expected
+
 
 if __name__ == "__main__":
     rostest.run("robot_kinematics", "kinematics math tests", Tests)

@@ -49,7 +49,7 @@ def inverse_transform(
 
 def general_mat(t, d, r, a) -> matrix:
     """General forward kinematics matrix
-    Obtained in section `2.2. Parámetros de Denavit–Hartenberg` of the documentation
+    Obtained in section `2.2. Parámetros de Denavit-Hartenberg` of the documentation
     """
     return mat(
         [
