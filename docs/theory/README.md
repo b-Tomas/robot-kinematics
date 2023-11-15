@@ -1,4 +1,4 @@
-# Material de toería
+# Material de teoría
 
 Aquí se encuentran los archivos fuente del documento que detalla la teoría detrás del proyecto. Una copia similar fue adjunta en la entrega final de trabajo para la asignatura ["Matemática C"](https://www1.ing.unlp.edu.ar/catedras/F1304/).
 
