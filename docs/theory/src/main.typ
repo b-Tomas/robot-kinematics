@@ -61,7 +61,7 @@ Se plantean las transformaciones #T, que nos permiten pasar de la "base" $B_i$ a
 
 == Coordenadas homogéneas
 
-Para solucionar esto, se utilizan las llamadas _coordenadas homogéneas_ @cox_little_oshea[cap. 8], que hacen uso de vectores de una dimensión más y los proyectan sobre el subespacio deseado. Al igual que las transformaciones lineales tradicionales nos permiten escalar e inclinar los ejes, y además nos permite transladarlos (entre otras opciones).
+Para solucionar esto, se utilizan las llamadas _coordenadas homogéneas_ @cox_little_oshea[cap. 8], que hacen uso de vectores de una dimensión más y los proyectan sobre el subespacio deseado. Al igual que las transformaciones lineales tradicionales nos permiten escalar e inclinar los ejes, y además nos permite trasladarlos (entre otras opciones).
 
 Este tópico es muy extenso y admite muchos tipos de proyecciones. En nustro caso, se utilizarán matrices de este tipo:
 
@@ -78,7 +78,7 @@ $
              0,           0, 1;
   )
   \ \
-  text("Translación")(x) = mat(
+  text("Traslación")(x) = mat(
     1, 0, x;
     0, 1, 0;
     0, 0, 1;
