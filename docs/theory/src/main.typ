@@ -348,4 +348,13 @@ El proyecto desarrollado incluyendo el entorno de simulación se encuentra dispo
 
 #v(2cm)
 
-#bibliography(style: "apa", "bibliography.yml")
+#bibliography(style: "apa", "bibliography.bib")
+
+#place(
+  bottom,
+)[ 
+  #line(length: 100%)
+
+  Este documento fue creado con Typst #sys.version. \
+  Última modificación realizada el #datetime.today().display("[day]/[month]/[year]").
+]
